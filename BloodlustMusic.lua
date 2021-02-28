@@ -348,16 +348,10 @@ end
 --f:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
 f:SetScript("OnEvent", f.OnEvent);
 
---Main Panel
+--Main/Options Panel
 BloodlustMusic.panel = CreateFrame( "Frame", "BloodlustMusicPanel", UIParent );
 BloodlustMusic.panel.name = "BloodlustMusic";
 InterfaceOptions_AddCategory(BloodlustMusic.panel);
-
- -- Options Panel
- BloodlustMusic.optionspanel = CreateFrame( "Frame", "BloodlustMusicSongPanel", BloodlustMusic.panel);
- BloodlustMusic.optionspanel.name = "Options";
- BloodlustMusic.optionspanel.parent = BloodlustMusic.panel.name;
- InterfaceOptions_AddCategory(BloodlustMusic.optionspanel);
 
 -- Song List Panel
  BloodlustMusic.songpanel = CreateFrame( "Frame", "BloodlustMusicSongPanel", BloodlustMusic.panel);
@@ -378,7 +372,7 @@ end
 local function PanelCreation()
 	--Example:
 	print("Inside PanelCreation")
-	local button = CreateFrame("Button","MyExampleButton", BloodlustMusic.optionspanel,"UIPanelButtonTemplate") --frameType, frameName, frameParent, frameTemplate
+	local button = CreateFrame("Button","MyExampleButton", BloodlustMusic.panel,"UIPanelButtonTemplate") --frameType, frameName, frameParent, frameTemplate
 	button:SetSize(80,40)
 	button:SetPoint("TOPLEFT",10,-10)
 	button.text = _G["MyExampleButton".."Text"]
@@ -395,8 +389,18 @@ local function PanelCreation()
 		print("currentSongSpellID = " .. tostring(currentSongSpellID))
 	end)
 
+	local songListButton = CreateFrame("Button","SongListButton", BloodlustMusic.panel,"UIPanelButtonTemplate") --frameType, frameName, frameParent, frameTemplate
+	songListButton:SetSize(80,40)
+	songListButton:SetPoint("BOTTOMLEFT",10,10)
+	songListButton.text = _G["SongListButton".."Text"]
+	songListButton.text:SetText("Song List")
+	songListButton:SetScript("OnClick", function(self, arg1)
+		print("songListButton is pressed");
+	 	InterfaceOptionsFrame_OpenToCategory(BloodlustMusic.songpanel);
+	end)
 
-	local BloodlustSlider = CreateFrame("Slider", "BloodlustSliderGlobalName", BloodlustMusic.optionspanel, "OptionsSliderTemplate")
+
+	local BloodlustSlider = CreateFrame("Slider", "BloodlustSliderGlobalName", BloodlustMusic.panel, "OptionsSliderTemplate")
 	BloodlustSlider:SetPoint("TOPRIGHT",-100,-100)
 	BloodlustSlider:SetMinMaxValues(0, 1)
     BloodlustSlider:SetValueStep(0.1)
@@ -418,7 +422,7 @@ local function PanelCreation()
 	BloodlustSlider:Show()
 
 	-- Create the dropdown, and configure its appearance
-	local dropDown = CreateFrame("FRAME", "WPDemoDropDown", BloodlustMusic.optionspanel, "UIDropDownMenuTemplate")
+	local dropDown = CreateFrame("FRAME", "WPDemoDropDown", BloodlustMusic.panel, "UIDropDownMenuTemplate")
 	dropDown:SetPoint("CENTER")
 	UIDropDownMenu_SetWidth(dropDown, 200)
 	UIDropDownMenu_SetText(dropDown, "Current soundchannel: " .. BloodlustMusic.soundChannelNames[BloodlustSoundchannelNumber])
@@ -440,9 +444,14 @@ local function PanelCreation()
 
 	-- Implement the function to change the favoriteNumber
 	function dropDown:SetValue(newValue)
+		
 		BloodlustSoundchannelNumber = newValue
+	
 		-- Update the text; if we merely wanted it to display newValue, we would not need to do this
 		UIDropDownMenu_SetText(dropDown, "Current soundchannel: " .. BloodlustMusic.soundChannelNames[BloodlustSoundchannelNumber])
+		print("Soundchannel changed to: " .. BloodlustMusic.soundChannelNames[BloodlustSoundchannelNumber])
+		BloodlustVolumecache = tonumber(GetCVar(BloodlustMusic.soundVolumeTable[BloodlustSoundchannelNumber]))
+		
 		-- Because this is called from a sub-menu, only that menu level is closed by default.
 		-- Close the entire menu with this next call
 		CloseDropDownMenus()
@@ -507,8 +516,8 @@ local Loading_EventFrame = CreateFrame("Frame")
 Loading_EventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 Loading_EventFrame:SetScript("OnEvent",
 	function(self, event, isInitialLogin, isReloadingUi)
-			print(BloodlustVolumecache)
-			print("Initial login")
+			print(BloodlustMusic.soundChannelNames[BloodlustSoundchannelNumber] .. ": " .. BloodlustVolumecache)
+			print("Loading Event")
 			print(BloodlustSoundhandle .. " stop song reload")
 			StopSound(BloodlustSoundhandle)
 			SetCVar(BloodlustMusic.soundVolumeTable[BloodlustSoundchannelNumber], BloodlustVolumecache)
@@ -530,7 +539,7 @@ Logout_EventFrame:SetScript("OnEvent",
 --What to do when Addon loads
 local BloodlustStartingFrame = CreateFrame("FRAME", "BloodlustMusic"); -- Need a frame to respond to events
 BloodlustStartingFrame:RegisterEvent("ADDON_LOADED"); -- Fired when saved variables are loaded
-BloodlustStartingFrame:RegisterEvent("PLAYER_LOGOUT"); -- Fired when about to log out
+--BloodlustStartingFrame:RegisterEvent("PLAYER_LOGOUT"); -- Fired when about to log out
 local function BloodlustStartingFrame_OnEvent(self, event, ...)
 	if (event == "ADDON_LOADED") and (... == "BloodlustMusic") then
 		print("Bloodlust Music Ready");
