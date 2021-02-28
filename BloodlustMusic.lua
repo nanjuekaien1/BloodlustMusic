@@ -372,9 +372,23 @@ end
 local function PanelCreation()
 	--Example:
 	print("Inside PanelCreation")
+
+    local BloodlustTitle = BloodlustMusic.panel:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
+    BloodlustTitle:SetPoint("TOPLEFT", 16, -16)
+    BloodlustTitle:SetText("Bloodlust Music")
+
+    local BloodlustSubtitle = BloodlustMusic.panel:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+    BloodlustSubtitle:SetHeight(35)
+    BloodlustSubtitle:SetPoint("TOPLEFT", BloodlustTitle, "BOTTOMLEFT", 0, -8)
+    BloodlustSubtitle:SetPoint("RIGHT", BloodlustMusic.panel, -32, 0)
+    BloodlustSubtitle:SetNonSpaceWrap(true)
+    BloodlustSubtitle:SetJustifyH("LEFT")
+    BloodlustSubtitle:SetJustifyV("TOP")
+    BloodlustSubtitle:SetText("Version 0.1 (alpha)")
+
 	local button = CreateFrame("Button","MyExampleButton", BloodlustMusic.panel,"UIPanelButtonTemplate") --frameType, frameName, frameParent, frameTemplate
 	button:SetSize(80,40)
-	button:SetPoint("TOPLEFT",10,-10)
+	button:SetPoint("LEFT",10,0)
 	button.text = _G["MyExampleButton".."Text"]
 	button.text:SetText("Print")
 	button:SetScript("OnClick", function(self, arg1)
@@ -401,22 +415,25 @@ local function PanelCreation()
 
 
 	local BloodlustSlider = CreateFrame("Slider", "BloodlustSliderGlobalName", BloodlustMusic.panel, "OptionsSliderTemplate")
-	BloodlustSlider:SetPoint("TOPRIGHT",-100,-100)
+	BloodlustSlider:SetPoint("TOPRIGHT",-50,-50)
 	BloodlustSlider:SetMinMaxValues(0, 1)
     BloodlustSlider:SetValueStep(0.1)
+	BloodlustSlider:SetObeyStepOnDrag(true)
 	BloodlustSlider:SetOrientation('HORIZONTAL')
 	BloodlustSlider.text = _G[BloodlustSlider:GetName() .. "Text"]
     BloodlustSlider.low = _G[BloodlustSlider:GetName() .. "Low"]
     BloodlustSlider.high = _G[BloodlustSlider:GetName() .. "High"]
 
     BloodlustSlider.text:SetText(math.floor(BloodlustChannelVolume*100)/100)
+	BloodlustSlider:SetValue(BloodlustChannelVolume)
     BloodlustSlider.low:SetText("0")
     BloodlustSlider.high:SetText("1")
-	BloodlustSlider.tooltipText = "This is the tooltip"
+	BloodlustSlider.tooltipText = "Volume of " .. BloodlustMusic.soundChannelNames[BloodlustSoundchannelNumber] .. " soundchannel during Hero"
 	--BloodlustSlider:SetThumbTexture(_ ["HIGH"])
 	BloodlustSlider:SetScript("OnValueChanged", function(self,event,arg1)
 		BloodlustChannelVolume = math.floor(BloodlustSlider:GetValue()*100)/100
 		BloodlustSlider.text:SetText(math.floor(BloodlustChannelVolume*100)/100)
+		
 	end)
 	print("create slider")
 	BloodlustSlider:Show()
@@ -451,6 +468,7 @@ local function PanelCreation()
 		UIDropDownMenu_SetText(dropDown, "Current soundchannel: " .. BloodlustMusic.soundChannelNames[BloodlustSoundchannelNumber])
 		print("Soundchannel changed to: " .. BloodlustMusic.soundChannelNames[BloodlustSoundchannelNumber])
 		BloodlustVolumecache = tonumber(GetCVar(BloodlustMusic.soundVolumeTable[BloodlustSoundchannelNumber]))
+		BloodlustSlider.tooltipText = "Volume of " .. BloodlustMusic.soundChannelNames[BloodlustSoundchannelNumber] .. " soundchannel during Hero"
 		
 		-- Because this is called from a sub-menu, only that menu level is closed by default.
 		-- Close the entire menu with this next call
