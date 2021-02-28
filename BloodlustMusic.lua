@@ -202,6 +202,7 @@ local soundchannelscache = GetCVar("Sound_NumChannels")
 local spellIDS = {80353, 32182, 2825, 264667, 146555, 178207, 256740, 230935, 309658}
 local isSongPlaying = false
 local currentSongSpellID
+local announcerHeader = "|cFFff2f00BloodlustMusic:|r "
 
 C_Timer.After(.1, function() -- wait a bit
 	playerGUID = UnitGUID("player");
@@ -262,7 +263,10 @@ function SongPlayer(heroSpellID)
 
 	SetCVar(BloodlustMusic.soundVolumeTable[BloodlustSoundchannelNumber], BloodlustVolumecache < BloodlustChannelVolume and BloodlustChannelVolume or BloodlustVolumecache)
 	--SetCVar(BloodlustMusic.soundVolumeTable[BloodlustSoundchannelNumber],  BloodlustChannelVolume)
-  	SetCVar("Sound_NumChannels", 128)
+	
+	if (BloodlustMaxSoundchannelBoolean) then
+  		SetCVar("Sound_NumChannels", 128)
+	end
 
 	PlaySong(songNumber)
 	--print("After PlaySong ")
@@ -294,7 +298,7 @@ function SongPlayer(heroSpellID)
 		currentSongSpellID = heroSpellID
 		print(currentlyPlaying)
 	end
-else 
+else
 	print("A song is already playing.")
 end
 end
@@ -378,9 +382,9 @@ local function PanelCreation()
     BloodlustTitle:SetText("Bloodlust Music")
 
     local BloodlustSubtitle = BloodlustMusic.panel:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-    BloodlustSubtitle:SetHeight(35)
+    --BloodlustSubtitle:SetHeight(35)
     BloodlustSubtitle:SetPoint("TOPLEFT", BloodlustTitle, "BOTTOMLEFT", 0, -8)
-    BloodlustSubtitle:SetPoint("RIGHT", BloodlustMusic.panel, -32, 0)
+    --BloodlustSubtitle:SetPoint("RIGHT", BloodlustMusic.panel, -32, 0)
     BloodlustSubtitle:SetNonSpaceWrap(true)
     BloodlustSubtitle:SetJustifyH("LEFT")
     BloodlustSubtitle:SetJustifyV("TOP")
@@ -397,8 +401,8 @@ local function PanelCreation()
 		print(BloodlustMusicSongEnabledTable[1]);
 		print(BloodlustMusicSongEnabledTable[2]);
 		print(BloodlustMusicSongEnabledTable[3]);
-		print("Volume during Hero should be: " .. BloodlustChannelVolume)
-		print("Normal Volume level should be: " .. BloodlustVolumecache)
+		print("Volume during Hero should be: " .. math.floor(BloodlustChannelVolume*100) .. "%")
+		print("Normal Volume level should be: " .. math.floor(BloodlustVolumecache*100) .. "%")
 		print("isSongPlaying  = " .. tostring(isSongPlaying))
 		print("currentSongSpellID = " .. tostring(currentSongSpellID))
 	end)
@@ -413,6 +417,21 @@ local function PanelCreation()
 	 	InterfaceOptionsFrame_OpenToCategory(BloodlustMusic.songpanel);
 	end)
 
+	local TestButton = CreateFrame("Button","TestButton", BloodlustMusic.panel,"UIPanelButtonTemplate") --frameType, frameName, frameParent, frameTemplate
+	TestButton:SetSize(80,40)
+	TestButton:SetPoint("BOTTOMRIGHT",-10,10)
+	TestButton.text = _G["TestButton".."Text"]
+	TestButton.text:SetText("Reset")
+	TestButton:SetScript("OnClick", function(self, arg1)
+		print("TestButton is pressed");
+		if (isSongPlaying) then
+			print("Resetting prevented, please try again after Hero has ended")
+		else
+		BloodlustVolumecache = tonumber(GetCVar(BloodlustMusic.soundVolumeTable[BloodlustSoundchannelNumber]))
+		print(announcerHeader .. "Regular volume level for "  .. BloodlustMusic.soundChannelNames[BloodlustSoundchannelNumber] .. " is now set to: " .. math.floor(BloodlustVolumecache*100) .. "%")
+		end
+	end)
+
 
 	local BloodlustSlider = CreateFrame("Slider", "BloodlustSliderGlobalName", BloodlustMusic.panel, "OptionsSliderTemplate")
 	BloodlustSlider:SetPoint("TOPRIGHT",-50,-50)
@@ -424,7 +443,7 @@ local function PanelCreation()
     BloodlustSlider.low = _G[BloodlustSlider:GetName() .. "Low"]
     BloodlustSlider.high = _G[BloodlustSlider:GetName() .. "High"]
 
-    BloodlustSlider.text:SetText(math.floor(BloodlustChannelVolume*100)/100)
+    BloodlustSlider.text:SetText(math.floor(BloodlustChannelVolume*100) .. "%")
 	BloodlustSlider:SetValue(BloodlustChannelVolume)
     BloodlustSlider.low:SetText("0")
     BloodlustSlider.high:SetText("1")
@@ -432,7 +451,7 @@ local function PanelCreation()
 	--BloodlustSlider:SetThumbTexture(_ ["HIGH"])
 	BloodlustSlider:SetScript("OnValueChanged", function(self,event,arg1)
 		BloodlustChannelVolume = math.floor(BloodlustSlider:GetValue()*100)/100
-		BloodlustSlider.text:SetText(math.floor(BloodlustChannelVolume*100)/100)
+		BloodlustSlider.text:SetText(math.floor(BloodlustChannelVolume*100) .. "%")
 		
 	end)
 	print("create slider")
@@ -452,7 +471,6 @@ local function PanelCreation()
 			for a, c in ipairs(BloodlustMusic.soundChannelTable) do
 				info.text = BloodlustMusic.soundChannelNames[a]
 				info.func = self.SetValue
-				--info.menuList, info.hasArrow = a, true
 				info.arg1, info.checked = a, a == BloodlustSoundchannelNumber
 				UIDropDownMenu_AddButton(info)
 			end
@@ -461,20 +479,45 @@ local function PanelCreation()
 
 	-- Implement the function to change the favoriteNumber
 	function dropDown:SetValue(newValue)
-		
-		BloodlustSoundchannelNumber = newValue
-	
-		-- Update the text; if we merely wanted it to display newValue, we would not need to do this
-		UIDropDownMenu_SetText(dropDown, "Current soundchannel: " .. BloodlustMusic.soundChannelNames[BloodlustSoundchannelNumber])
-		print("Soundchannel changed to: " .. BloodlustMusic.soundChannelNames[BloodlustSoundchannelNumber])
-		BloodlustVolumecache = tonumber(GetCVar(BloodlustMusic.soundVolumeTable[BloodlustSoundchannelNumber]))
-		BloodlustSlider.tooltipText = "Volume of " .. BloodlustMusic.soundChannelNames[BloodlustSoundchannelNumber] .. " soundchannel during Hero"
-		
-		-- Because this is called from a sub-menu, only that menu level is closed by default.
-		-- Close the entire menu with this next call
-		CloseDropDownMenus()
+		if(isSongPlaying) then
+			print(announcerHeader .. "Changing soundchannel prevented, please do so after hero has ended")
+			CloseDropDownMenus()
+		else
+			BloodlustSoundchannelNumber = newValue
+			UIDropDownMenu_SetText(dropDown, "Current soundchannel: " .. BloodlustMusic.soundChannelNames[BloodlustSoundchannelNumber])
+			print(announcerHeader .. "Soundchannel changed to: " .. BloodlustMusic.soundChannelNames[BloodlustSoundchannelNumber])
+			BloodlustVolumecache = tonumber(GetCVar(BloodlustMusic.soundVolumeTable[BloodlustSoundchannelNumber]))
+			BloodlustSlider.tooltipText = "Volume of " .. BloodlustMusic.soundChannelNames[BloodlustSoundchannelNumber] .. " soundchannel during Hero"
+			CloseDropDownMenus()
+		end
 	end
 
+	local BloodlustDropDownLabel = BloodlustMusic.panel:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+    BloodlustDropDownLabel:SetPoint("LEFT", dropDown, "TOPLEFT", 20, 7)
+    BloodlustDropDownLabel:SetNonSpaceWrap(true)
+    --BloodlustDropDownLabel:SetJustifyH("LEFT")
+    --BloodlustDropDownLabel:SetJustifyV("TOP")
+	BloodlustDropDownLabel:SetText("Sound Channel")
+
+	local MaxSoundchannelCheckbox = CreateFrame("CheckButton", "MaxSoundchannelCheckboxCheckButton", BloodlustMusic.songpanel, "UICheckButtonTemplate")
+	MaxSoundchannelCheckbox:SetPoint("TOPLEFT", BloodlustMusic.panel, "TOPLEFT", 10, -75)
+	MaxSoundchannelCheckbox:SetSize(27, 27)
+	MaxSoundchannelCheckbox.text:SetFontObject("GameFontNormal")
+	MaxSoundchannelCheckbox.text:SetText("Set Max number of soundchannels during Hero to 128?")
+	MaxSoundchannelCheckbox.text:SetTextColor(1, 1, 1, 1)
+	if (getglobal("MaxSoundchannelCheckboxCheckButton"):GetChecked() ~= BloodlustMaxSoundchannelBoolean) then
+		--print("inside getglobal");
+		getglobal("MaxSoundchannelCheckboxCheckButton"):SetChecked(BloodlustMaxSoundchannelBoolean);
+	end
+	MaxSoundchannelCheckbox:SetScript("OnClick", function(self,event,arg1)
+		if (self:GetChecked()) then
+			print("set to true");
+			BloodlustMaxSoundchannelBoolean = true;
+		else
+			print("set to false");
+			BloodlustMaxSoundchannelBoolean = false;
+		end
+	end)
 	--Create Checkbuttons
 	for a,c in ipairs(BloodlustMusicSongEnabledTable) do
 		-- create checkbox
@@ -534,7 +577,7 @@ local Loading_EventFrame = CreateFrame("Frame")
 Loading_EventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 Loading_EventFrame:SetScript("OnEvent",
 	function(self, event, isInitialLogin, isReloadingUi)
-			print(BloodlustMusic.soundChannelNames[BloodlustSoundchannelNumber] .. ": " .. BloodlustVolumecache)
+			print(BloodlustMusic.soundChannelNames[BloodlustSoundchannelNumber] .. ": " .. math.floor(BloodlustVolumecache*100) .. "%")
 			print("Loading Event")
 			print(BloodlustSoundhandle .. " stop song reload")
 			StopSound(BloodlustSoundhandle)
@@ -584,6 +627,10 @@ local function BloodlustStartingFrame_OnEvent(self, event, ...)
 
 		if(not BloodlustChannelVolume) then
 			BloodlustChannelVolume = 1
+		end
+
+		if(not BloodlustMaxSoundchannelBoolean)
+			then BloodlustMaxSoundchannelBoolean = false
 		end
 
 		PanelCreation()

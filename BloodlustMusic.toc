@@ -3,6 +3,6 @@
 ## Notes: A bloated, over-engineered Addon that plays music during Bloodlust
 ## Author: Yellowdevil-Draenor
 ## Version: 0.1
-## SavedVariables: BloodlustMusicSongEnabledTable, BloodlustSoundchannelNumber, BloodlustVolumecache, BloodlustSoundhandle, BloodlustChannelVolume
+## SavedVariables: BloodlustMusicSongEnabledTable, BloodlustSoundchannelNumber, BloodlustVolumecache, BloodlustSoundhandle, BloodlustChannelVolume, BloodlustMaxSoundchannelBoolean
 
 BloodlustMusic.lua
