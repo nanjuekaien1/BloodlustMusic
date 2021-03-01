@@ -198,7 +198,6 @@ local currentFilePath = " "
 local currentlyPlaying = " "
 local minute = 0
 local songNumber = 0
-local soundchannelscache = GetCVar("Sound_NumChannels")
 local spellIDS = {80353, 32182, 2825, 264667, 146555, 178207, 256740, 230935, 309658}
 local isSongPlaying = false
 local currentSongSpellID
@@ -212,7 +211,7 @@ end)
 
 function PlaySong(song)
     currentFilePath = defaultFilePath;
-	currentlyPlaying = "Now Playing: "
+	currentlyPlaying = announcerHeader ..  "Now Playing: "
 	print("inside PlaySong")
 
 
@@ -244,7 +243,6 @@ function SongPlayer(heroSpellID)
 	currentFilePath = " "
 	currentlyPlaying = " "
 	BloodlustVolumecache = tonumber(GetCVar(BloodlustMusic.soundVolumeTable[BloodlustSoundchannelNumber]))
-  	soundchannelscache = GetCVar("Sound_NumChannels")
 
 	--gets the current local time (minute)
 	minute = (date("%M"))
@@ -259,11 +257,11 @@ function SongPlayer(heroSpellID)
 
 	--plays the song
 	BloodlustVolumecache = tonumber(GetCVar(BloodlustMusic.soundVolumeTable[BloodlustSoundchannelNumber]))
-  	soundchannelscache = GetCVar("Sound_NumChannels")
+	BloodlustSoundchannelscache = GetCVar("Sound_NumChannels")
 
 	SetCVar(BloodlustMusic.soundVolumeTable[BloodlustSoundchannelNumber], BloodlustVolumecache < BloodlustChannelVolume and BloodlustChannelVolume or BloodlustVolumecache)
 	--SetCVar(BloodlustMusic.soundVolumeTable[BloodlustSoundchannelNumber],  BloodlustChannelVolume)
-	
+
 	if (BloodlustMaxSoundchannelBoolean) then
   		SetCVar("Sound_NumChannels", 128)
 	end
@@ -292,14 +290,14 @@ function SongPlayer(heroSpellID)
 	--displays the current song playing, or that it failed to play any
 	if(tried >= 20)
 	then
-		print("No song was selected. Please check your Addon or Sound settings")
+		print(announcerHeader .. "No song was selected. Please check your Addon or Sound settings")
 	else
 		isSongPlaying = true
 		currentSongSpellID = heroSpellID
 		print(currentlyPlaying)
 	end
 else
-	print("A song is already playing.")
+	print(announcerHeader .. "A song is already playing.")
 end
 end
 
@@ -310,8 +308,8 @@ function StopSong()
 	print(BloodlustSoundhandle.. " stop song func")
 	StopSound(BloodlustSoundhandle)
 	SetCVar(BloodlustMusic.soundVolumeTable[BloodlustSoundchannelNumber], BloodlustVolumecache)
-  	SetCVar("Sound_NumChannels", soundchannelscache)
-	print("Sound Stopped")
+  	SetCVar("Sound_NumChannels", BloodlustSoundchannelscache)
+	print(announcerHeader .. "Song Stopped")
 end
 
 function f:OnEvent()
@@ -336,12 +334,12 @@ function f:OnEvent()
 			for key,value in pairs(spellIDS) do
 				if (value == spellID and value == currentSongSpellID)
 				then
-				
+
 				--print(spellID)
-				--print(currentSongSpellID)	
+				--print(currentSongSpellID)
 				--print("spellID match removed");
 				StopSong();
-				
+
 			end
 			end
 		end
@@ -391,10 +389,10 @@ local function PanelCreation()
     BloodlustSubtitle:SetText("Version 0.1 (alpha)")
 
 	local button = CreateFrame("Button","MyExampleButton", BloodlustMusic.panel,"UIPanelButtonTemplate") --frameType, frameName, frameParent, frameTemplate
-	button:SetSize(80,40)
-	button:SetPoint("LEFT",10,0)
+	button:SetWidth(128)
+	button:SetPoint("BOTTOM",0,10)
 	button.text = _G["MyExampleButton".."Text"]
-	button.text:SetText("Print")
+	button:SetText("Print")
 	button:SetScript("OnClick", function(self, arg1)
 		print("Print Button is pressed");
 		--getglobal("TestCheckButton"):SetChecked(true);
@@ -408,24 +406,24 @@ local function PanelCreation()
 	end)
 
 	local songListButton = CreateFrame("Button","SongListButton", BloodlustMusic.panel,"UIPanelButtonTemplate") --frameType, frameName, frameParent, frameTemplate
-	songListButton:SetSize(80,40)
+	songListButton:SetWidth(128)
 	songListButton:SetPoint("BOTTOMLEFT",10,10)
 	songListButton.text = _G["SongListButton".."Text"]
-	songListButton.text:SetText("Song List")
+	songListButton:SetText("Song List")
 	songListButton:SetScript("OnClick", function(self, arg1)
 		print("songListButton is pressed");
 	 	InterfaceOptionsFrame_OpenToCategory(BloodlustMusic.songpanel);
 	end)
 
-	local TestButton = CreateFrame("Button","TestButton", BloodlustMusic.panel,"UIPanelButtonTemplate") --frameType, frameName, frameParent, frameTemplate
-	TestButton:SetSize(80,40)
-	TestButton:SetPoint("BOTTOMRIGHT",-10,10)
-	TestButton.text = _G["TestButton".."Text"]
-	TestButton.text:SetText("Reset")
-	TestButton:SetScript("OnClick", function(self, arg1)
-		print("TestButton is pressed");
+	local soundResetButton = CreateFrame("Button","soundResetButton", BloodlustMusic.panel,"UIPanelButtonTemplate") --frameType, frameName, frameParent, frameTemplate
+	soundResetButton:SetWidth(128)
+	soundResetButton:SetPoint("BOTTOMRIGHT",-10,10)
+	soundResetButton.text = _G["soundResetButton".."Text"]
+	soundResetButton:SetText("Reset")
+	soundResetButton:SetScript("OnClick", function(self, arg1)
+		print("soundResetButton is pressed");
 		if (isSongPlaying) then
-			print("Resetting prevented, please try again after Hero has ended")
+			print(announcerHeader .. "Resetting prevented, please try again after Hero has ended")
 		else
 		BloodlustVolumecache = tonumber(GetCVar(BloodlustMusic.soundVolumeTable[BloodlustSoundchannelNumber]))
 		print(announcerHeader .. "Regular volume level for "  .. BloodlustMusic.soundChannelNames[BloodlustSoundchannelNumber] .. " is now set to: " .. math.floor(BloodlustVolumecache*100) .. "%")
@@ -434,7 +432,7 @@ local function PanelCreation()
 
 
 	local BloodlustSlider = CreateFrame("Slider", "BloodlustSliderGlobalName", BloodlustMusic.panel, "OptionsSliderTemplate")
-	BloodlustSlider:SetPoint("TOPRIGHT",-50,-50)
+	BloodlustSlider:SetPoint("LEFT", 25, 0)
 	BloodlustSlider:SetMinMaxValues(0, 1)
     BloodlustSlider:SetValueStep(0.1)
 	BloodlustSlider:SetObeyStepOnDrag(true)
@@ -452,14 +450,19 @@ local function PanelCreation()
 	BloodlustSlider:SetScript("OnValueChanged", function(self,event,arg1)
 		BloodlustChannelVolume = math.floor(BloodlustSlider:GetValue()*100)/100
 		BloodlustSlider.text:SetText(math.floor(BloodlustChannelVolume*100) .. "%")
-		
+
 	end)
 	print("create slider")
 	BloodlustSlider:Show()
 
+	local BloodlustSliderLabel = BloodlustMusic.panel:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
+    BloodlustSliderLabel:SetPoint("LEFT", BloodlustSlider, "TOPLEFT", -1.5, 20)
+    BloodlustSliderLabel:SetNonSpaceWrap(true)
+	BloodlustSliderLabel:SetText(BloodlustMusic.soundChannelNames[BloodlustSoundchannelNumber] .. " volume during Hero")
+
 	-- Create the dropdown, and configure its appearance
 	local dropDown = CreateFrame("FRAME", "WPDemoDropDown", BloodlustMusic.panel, "UIDropDownMenuTemplate")
-	dropDown:SetPoint("CENTER")
+	dropDown:SetPoint("TOPLEFT", BloodlustSlider, "TOPLEFT", -20, 75)
 	UIDropDownMenu_SetWidth(dropDown, 200)
 	UIDropDownMenu_SetText(dropDown, "Current soundchannel: " .. BloodlustMusic.soundChannelNames[BloodlustSoundchannelNumber])
 
@@ -488,19 +491,18 @@ local function PanelCreation()
 			print(announcerHeader .. "Soundchannel changed to: " .. BloodlustMusic.soundChannelNames[BloodlustSoundchannelNumber])
 			BloodlustVolumecache = tonumber(GetCVar(BloodlustMusic.soundVolumeTable[BloodlustSoundchannelNumber]))
 			BloodlustSlider.tooltipText = "Volume of " .. BloodlustMusic.soundChannelNames[BloodlustSoundchannelNumber] .. " soundchannel during Hero"
+			BloodlustSliderLabel:SetText(BloodlustMusic.soundChannelNames[BloodlustSoundchannelNumber] .. " volume during Hero")
 			CloseDropDownMenus()
 		end
 	end
 
-	local BloodlustDropDownLabel = BloodlustMusic.panel:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+	local BloodlustDropDownLabel = BloodlustMusic.panel:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
     BloodlustDropDownLabel:SetPoint("LEFT", dropDown, "TOPLEFT", 20, 7)
     BloodlustDropDownLabel:SetNonSpaceWrap(true)
-    --BloodlustDropDownLabel:SetJustifyH("LEFT")
-    --BloodlustDropDownLabel:SetJustifyV("TOP")
 	BloodlustDropDownLabel:SetText("Sound Channel")
 
-	local MaxSoundchannelCheckbox = CreateFrame("CheckButton", "MaxSoundchannelCheckboxCheckButton", BloodlustMusic.songpanel, "UICheckButtonTemplate")
-	MaxSoundchannelCheckbox:SetPoint("TOPLEFT", BloodlustMusic.panel, "TOPLEFT", 10, -75)
+	local MaxSoundchannelCheckbox = CreateFrame("CheckButton", "MaxSoundchannelCheckboxCheckButton", BloodlustMusic.panel, "UICheckButtonTemplate")
+	MaxSoundchannelCheckbox:SetPoint("LEFT", BloodlustSlider, "TOPLEFT", -5, -50)
 	MaxSoundchannelCheckbox:SetSize(27, 27)
 	MaxSoundchannelCheckbox.text:SetFontObject("GameFontNormal")
 	MaxSoundchannelCheckbox.text:SetText("Set Max number of soundchannels during Hero to 128?")
@@ -511,10 +513,10 @@ local function PanelCreation()
 	end
 	MaxSoundchannelCheckbox:SetScript("OnClick", function(self,event,arg1)
 		if (self:GetChecked()) then
-			print("set to true");
+			--print("set to true");
 			BloodlustMaxSoundchannelBoolean = true;
 		else
-			print("set to false");
+			--print("set to false");
 			BloodlustMaxSoundchannelBoolean = false;
 		end
 	end)
@@ -582,6 +584,7 @@ Loading_EventFrame:SetScript("OnEvent",
 			print(BloodlustSoundhandle .. " stop song reload")
 			StopSound(BloodlustSoundhandle)
 			SetCVar(BloodlustMusic.soundVolumeTable[BloodlustSoundchannelNumber], BloodlustVolumecache)
+			SetCVar("Sound_NumChannels", BloodlustSoundchannelscache)
 			f:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
 			C_Timer.After(1, function()
 				f:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
@@ -594,6 +597,7 @@ Logout_EventFrame:RegisterEvent("PLAYER_LOGOUT")
 Logout_EventFrame:SetScript("OnEvent",
 	function(self, event, ...)
 	SetCVar(BloodlustMusic.soundVolumeTable[BloodlustSoundchannelNumber], BloodlustVolumecache)
+	SetCVar("Sound_NumChannels", BloodlustSoundchannelscache)
 	StopSound(BloodlustSoundhandle)
 	end)
 
@@ -629,8 +633,12 @@ local function BloodlustStartingFrame_OnEvent(self, event, ...)
 			BloodlustChannelVolume = 1
 		end
 
-		if(not BloodlustMaxSoundchannelBoolean)
-			then BloodlustMaxSoundchannelBoolean = false
+		if(not BloodlustMaxSoundchannelBoolean) then
+			BloodlustMaxSoundchannelBoolean = false
+		end
+
+		if(not BloodlustSoundchannelscache) then
+			BloodlustSoundchannelscache = 64
 		end
 
 		PanelCreation()
