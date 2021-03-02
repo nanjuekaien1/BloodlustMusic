@@ -250,9 +250,9 @@ function SongPlayer(heroSpellID)
 
 	--makes sure songNumber is never zero and makes sure songNumber can't be higher than 47. Lua tables start at 1 and there are only 47 songs
 	songNumber = minute + 1
-	if (songNumber > 47)
+	if (songNumber > table.getn(BloodlustMusicSongEnabledTable))
 	then
-		songNumber = songNumber - 13
+		songNumber = songNumber - (60 - (table.getn(BloodlustMusicSongEnabledTable)))
 	end
 
 	--plays the song
@@ -276,7 +276,7 @@ function SongPlayer(heroSpellID)
 		repeat
 
 			--generates a random number
-			randomNumber=math.random(1,47)
+			randomNumber=math.random(1,table.getn(BloodlustMusicSongEnabledTable))
 			print("RNG " .. randomNumber)
 
 			--plays the song
@@ -396,9 +396,10 @@ local function PanelCreation()
 	PrintButton:SetScript("OnClick", function(self, arg1)
 		print("Print Button is pressed");
 		--getglobal("SongCheckbox"):SetChecked(true);
-		print(BloodlustMusicSongEnabledTable[1]);
-		print(BloodlustMusicSongEnabledTable[2]);
-		print(BloodlustMusicSongEnabledTable[3]);
+		print(BloodlustMusicSongEnabledTable[1])
+		print(BloodlustMusicSongEnabledTable[2])
+		print(BloodlustMusicSongEnabledTable[3])
+		print(table.getn(BloodlustMusicSongEnabledTable))
 		print("Volume during Hero should be: " .. math.floor(BloodlustChannelVolume*100) .. "%")
 		print("Normal Volume level should be: " .. math.floor(BloodlustVolumecache*100) .. "%")
 		print("isSongPlaying  = " .. tostring(isSongPlaying))
