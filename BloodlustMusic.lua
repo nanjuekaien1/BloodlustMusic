@@ -47,7 +47,10 @@ BloodlustMusic.songPathTable = {
 	[[ShrekHero.ogg]],      --44
 	[[BonkersHero.ogg]],    --45
     [[HyperSuperHero.ogg]], --46
-    [[SuperstarHero.ogg]]   --47
+    [[SuperstarHero.ogg]],  --47
+	[[AdrenalineHero.ogg]], --48
+	[[LoveDangerHero.ogg]]  --49
+
 }
 
 BloodlustMusic.songNameTable = {
@@ -97,7 +100,9 @@ BloodlustMusic.songNameTable = {
 	[[Jennifer Saunders - Holding Out for a Hero]],
 	[[Dizzee Rascal & Armand van Helden - Bonkers]],
     [[Fastway - Hyper Super Power]],
-    [[Go2 & DJ Boss - Superstar]]
+    [[Go2 & DJ Boss - Superstar]],
+	[[Ace - Adrenaline]],
+	[[Priscilla - Love is in Danger]]
 }
 
 BloodlustMusic.soundChannelTable = {
@@ -190,6 +195,7 @@ function SongPlayer(heroSpellID)
 
 	--makes sure songNumber is never zero and makes sure songNumber can't be higher than 47. Lua tables start at 1 and there are only 47 songs
 	songNumber = minute + 1
+	--songNumber = 49
 	if (songNumber > table.getn(BloodlustMusicSongEnabledTable))
 	then
 		songNumber = songNumber - (60 - (table.getn(BloodlustMusicSongEnabledTable)))
@@ -541,6 +547,15 @@ local function BloodlustStartingFrame_OnEvent(self, event, ...)
 
 			for a, c in ipairs(BloodlustMusic.songPathTable) do
 				BloodlustMusicSongEnabledTable [a] = true
+			end
+		end
+
+		if (table.getn(BloodlustMusicSongEnabledTable) < table.getn(BloodlustMusic.songPathTable)) then
+			print(announcerHeader .. "New songs were probably added. Fixing some stuff")
+			for a, c in ipairs(BloodlustMusic.songPathTable) do
+				if (a > table.getn(BloodlustMusicSongEnabledTable)) then
+					BloodlustMusicSongEnabledTable [a] = true
+				end
 			end
 		end
 
