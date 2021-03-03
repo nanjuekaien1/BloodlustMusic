@@ -100,58 +100,6 @@ BloodlustMusic.songNameTable = {
     [[Go2 & DJ Boss - Superstar]]
 }
 
---[[
-BloodlustMusicSongEnabledTable = {
-    true, --gas
-    true, --nineties
-    true, --brain
-    true, --freebird
-    true, --sandstorm = true,
-    true, --night = true,
-    true, --elephant = true,
-    true, --saiyan = true,
-    true, --jellyfish = true,
-    true, --thetop = true,
-    true, --ddd = true,
-    true, --updance = true,
-    true, --hardcore = true,
-    true, --perfect = true,
-    true, --speedy = true,
-    true, --cascada = true,
-    true, --sunrain = true,
-    true, --dontstop = true,
-    true, --invaders = true,
-    true, --callonme = true,
-    true, --kisskill = true,
-    true, --looka = true,
-    true, --anchor = true,
-    true, --fullmetal = true,
-    true, --kickstart = true,
-    true, --rider = true,
-    true, --risingsun = true,
-    true, --bloodsugar = true,
-    true, --dejavu = true,
-    true, --rumble = true,
-    true, --hurricane = true,
-    true, --dontturn1 = true,
-    true, --dontturn2 = true,
-    true, --euronight = true,
-    true, --beatinwild = true,
-    true, --king = true,
-    true, --superrider = true,
-    true, --pistongo = true,
-    true, --dancing = true,
-    true, --beatcrazy = true,
-    true, --spitfire = true,
-    true, --shockout = true,
-    true, --speedlover = true
-	true, --shrek = true
-	true, --bonkers = true
-    true, --hypersuper = true
-    true  --superstar = true
-}
---]]
-
 BloodlustMusic.soundChannelTable = {
     "master",
     "sfx",
@@ -180,11 +128,8 @@ BloodlustMusic.soundChannelNames = {
 SLASH_BLOODLUSTMUSIC1, SLASH_BLOODLUSTMUSIC2 = '/blm', '/bloodlust';
 
 function SlashCmdList.BLOODLUSTMUSIC(msg, editbox)
-	--InterfaceOptionsFrame_OpenToCategory(BloodlustMusic.panel);
-	--InterfaceOptionsFrame_OpenToCategory(BloodlustMusic.panel);
 	InterfaceOptionsFrame:Show()
 	InterfaceOptionsFrame_OpenToCategory(BloodlustMusic.panel);
-	--BloodlustMusic.panel:Show();
 end
 
 --Declaring Variables
@@ -227,11 +172,6 @@ function PlaySong(song)
 	end
 
 	willPlay, BloodlustSoundhandle = PlaySoundFile(currentFilePath, BloodlustMusic.soundChannelTable[BloodlustSoundchannelNumber])
-	--print(willPlay)
-	--print(BloodlustSoundhandle)
-
-	--print(BloodlustSoundhandle .. " inside song")
-
 end
 
 function SongPlayer(heroSpellID)
@@ -260,14 +200,13 @@ function SongPlayer(heroSpellID)
 	BloodlustSoundchannelscache = GetCVar("Sound_NumChannels")
 
 	SetCVar(BloodlustMusic.soundVolumeTable[BloodlustSoundchannelNumber], BloodlustVolumecache < BloodlustChannelVolume and BloodlustChannelVolume or BloodlustVolumecache)
-	--SetCVar(BloodlustMusic.soundVolumeTable[BloodlustSoundchannelNumber],  BloodlustChannelVolume)
+
 
 	if (BloodlustMaxSoundchannelBoolean) then
   		SetCVar("Sound_NumChannels", 128)
 	end
 
 	PlaySong(songNumber)
-	--print("After PlaySong ")
 
 	--checks if song actually played
 	if(not willPlay == true)
@@ -290,6 +229,8 @@ function SongPlayer(heroSpellID)
 	--displays the current song playing, or that it failed to play any
 	if(tried >= 20)
 	then
+		SetCVar(BloodlustMusic.soundVolumeTable[BloodlustSoundchannelNumber], BloodlustVolumecache)
+		SetCVar("Sound_NumChannels", BloodlustSoundchannelscache)
 		print(announcerHeader .. "No song was selected. Please check your Addon or Sound settings")
 	else
 		isSongPlaying = true
@@ -314,9 +255,6 @@ end
 
 function f:OnEvent()
 	local _, event, _, _, _, _, _, destinationGUID, _, _, _, spellID, spellName, _, _ = CombatLogGetCurrentEventInfo();
-	--print(event); --event type
-	--print(destinationGUID);
-	--print(spellID .. " " .. spellName)
 
 		if (event == "SPELL_AURA_APPLIED" and destinationGUID == playerGUID)
 		then
@@ -324,7 +262,6 @@ function f:OnEvent()
 			for key,value in pairs(spellIDS) do
 				if (value == spellID)
 				then
-				--print("spellID match applied");
 				SongPlayer(value);
 				end
 			end
@@ -334,20 +271,13 @@ function f:OnEvent()
 			for key,value in pairs(spellIDS) do
 				if (value == spellID and value == currentSongSpellID)
 				then
-
-				--print(spellID)
-				--print(currentSongSpellID)
-				--print("spellID match removed");
 				StopSong();
-
-			end
+				end
 			end
 		end
 end
 
 
-
---f:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
 f:SetScript("OnEvent", f.OnEvent);
 
 --Main/Options Panel
@@ -356,10 +286,10 @@ BloodlustMusic.panel.name = "BloodlustMusic";
 InterfaceOptions_AddCategory(BloodlustMusic.panel);
 
 -- Song List Panel
- BloodlustMusic.songpanel = CreateFrame( "Frame", "BloodlustMusicSongPanel", BloodlustMusic.panel);
- BloodlustMusic.songpanel.name = "Song List";
- BloodlustMusic.songpanel.parent = BloodlustMusic.panel.name;
- InterfaceOptions_AddCategory(BloodlustMusic.songpanel);
+BloodlustMusic.songpanel = CreateFrame( "Frame", "BloodlustMusicSongPanel", BloodlustMusic.panel);
+BloodlustMusic.songpanel.name = "Song List";
+BloodlustMusic.songpanel.parent = BloodlustMusic.panel.name;
+InterfaceOptions_AddCategory(BloodlustMusic.songpanel);
 
 
 
@@ -372,7 +302,6 @@ end
 
 
 local function PanelCreation()
-	--Example:
 	print("Inside PanelCreation")
 
     local BloodlustTitle = BloodlustMusic.panel:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
@@ -380,22 +309,19 @@ local function PanelCreation()
     BloodlustTitle:SetText("Bloodlust Music")
 
     local BloodlustSubtitle = BloodlustMusic.panel:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-    --BloodlustSubtitle:SetHeight(35)
     BloodlustSubtitle:SetPoint("TOPLEFT", BloodlustTitle, "BOTTOMLEFT", 0, -8)
-    --BloodlustSubtitle:SetPoint("RIGHT", BloodlustMusic.panel, -32, 0)
     BloodlustSubtitle:SetNonSpaceWrap(true)
     BloodlustSubtitle:SetJustifyH("LEFT")
     BloodlustSubtitle:SetJustifyV("TOP")
     BloodlustSubtitle:SetText("Version 0.1 (alpha)")
 
-	local PrintButton = CreateFrame("Button","PrintButton", BloodlustMusic.panel,"UIPanelButtonTemplate") --frameType, frameName, frameParent, frameTemplate
+	local PrintButton = CreateFrame("Button","PrintButton", BloodlustMusic.panel,"UIPanelButtonTemplate")
 	PrintButton:SetWidth(128)
 	PrintButton:SetPoint("BOTTOM",0,10)
 	PrintButton.text = _G["PrintButton".."Text"]
 	PrintButton:SetText("Print")
 	PrintButton:SetScript("OnClick", function(self, arg1)
 		print("Print Button is pressed");
-		--getglobal("SongCheckbox"):SetChecked(true);
 		print(BloodlustMusicSongEnabledTable[1])
 		print(BloodlustMusicSongEnabledTable[2])
 		print(BloodlustMusicSongEnabledTable[3])
@@ -406,7 +332,7 @@ local function PanelCreation()
 		print("currentSongSpellID = " .. tostring(currentSongSpellID))
 	end)
 
-	local SongListButton = CreateFrame("Button","SongListButton", BloodlustMusic.panel,"UIPanelButtonTemplate") --frameType, frameName, frameParent, frameTemplate
+	local SongListButton = CreateFrame("Button","SongListButton", BloodlustMusic.panel,"UIPanelButtonTemplate")
 	SongListButton:SetWidth(128)
 	SongListButton:SetPoint("BOTTOMLEFT",10,10)
 	SongListButton.text = _G["SongListButton".."Text"]
@@ -416,7 +342,7 @@ local function PanelCreation()
 	 	InterfaceOptionsFrame_OpenToCategory(BloodlustMusic.songpanel);
 	end)
 
-	local SoundResetButton = CreateFrame("Button","SoundResetButton", BloodlustMusic.panel,"UIPanelButtonTemplate") --frameType, frameName, frameParent, frameTemplate
+	local SoundResetButton = CreateFrame("Button","SoundResetButton", BloodlustMusic.panel,"UIPanelButtonTemplate")
 	SoundResetButton:SetWidth(128)
 	SoundResetButton:SetPoint("BOTTOMRIGHT",-10,10)
 	SoundResetButton.text = _G["SoundResetButton".."Text"]
@@ -447,7 +373,6 @@ local function PanelCreation()
     BloodlustSlider.low:SetText("0")
     BloodlustSlider.high:SetText("1")
 	BloodlustSlider.tooltipText = "Volume of " .. BloodlustMusic.soundChannelNames[BloodlustSoundchannelNumber] .. " soundchannel during Hero"
-	--BloodlustSlider:SetThumbTexture(_ ["HIGH"])
 	BloodlustSlider:SetScript("OnValueChanged", function(self,event,arg1)
 		BloodlustChannelVolume = math.floor(BloodlustSlider:GetValue()*100)/100
 		BloodlustSlider.text:SetText(math.floor(BloodlustChannelVolume*100) .. "%")
@@ -471,7 +396,6 @@ local function PanelCreation()
 	UIDropDownMenu_Initialize(SoundchannelDropdown, function(self, level, menuList)
 		local info = UIDropDownMenu_CreateInfo()
 		if (level or 1) == 1 then
-			-- Display the 0-9, 10-19, ... groups
 			for a, c in ipairs(BloodlustMusic.soundChannelTable) do
 				info.text = BloodlustMusic.soundChannelNames[a]
 				info.func = self.SetValue
@@ -481,7 +405,7 @@ local function PanelCreation()
 		end
 	end)
 
-	-- Implement the function to change the favoriteNumber
+	--Implement function to change Soundchannel via dropdown menu
 	function SoundchannelDropdown:SetValue(newValue)
 		if(isSongPlaying) then
 			print(announcerHeader .. "Changing soundchannel prevented, please do so after hero has ended")
@@ -509,24 +433,19 @@ local function PanelCreation()
 	MaxSoundchannelCheckbox.text:SetText("Set Max number of soundchannels during Hero to 128?")
 	MaxSoundchannelCheckbox.text:SetTextColor(1, 1, 1, 1)
 	if (getglobal("MaxSoundchannelCheckbox"):GetChecked() ~= BloodlustMaxSoundchannelBoolean) then
-		--print("inside getglobal");
 		getglobal("MaxSoundchannelCheckbox"):SetChecked(BloodlustMaxSoundchannelBoolean);
 	end
 	MaxSoundchannelCheckbox:SetScript("OnClick", function(self,event,arg1)
 		if (self:GetChecked()) then
-			--print("set to true");
 			BloodlustMaxSoundchannelBoolean = true;
 		else
-			--print("set to false");
 			BloodlustMaxSoundchannelBoolean = false;
 		end
 	end)
+
 	--Create Checkbuttons
 	for a,c in ipairs(BloodlustMusicSongEnabledTable) do
-		-- create checkbox
-		--print("inside forloop")
 			if (a < 31) then
-				--print("a < 21")
 				local LeftSongCheckbox = CreateFrame("CheckButton", "SongCheckbox ".. a, BloodlustMusic.songpanel, "UICheckButtonTemplate")
 				LeftSongCheckbox:SetPoint("TOPLEFT", BloodlustMusic.songpanel, "TOPLEFT", 5, ((a-1)* -18.6))
 				LeftSongCheckbox:SetSize(27, 27)
@@ -535,16 +454,13 @@ local function PanelCreation()
 				LeftSongCheckbox.text:SetTextColor(1, 1, 1, 1)
 
 				if (getglobal("SongCheckbox "..a):GetChecked() ~= BloodlustMusicSongEnabledTable[a]) then
-					--print("inside getglobal");
 					getglobal("SongCheckbox "..a):SetChecked(BloodlustMusicSongEnabledTable[a]);
 				end
 
 				LeftSongCheckbox:SetScript("OnClick", function(self,event,arg1)
 					if (self:GetChecked()) then
-						--print("set to true");
 						BloodlustMusicSongEnabledTable[a] = true;
 					else
-						--print("set to false");
 						BloodlustMusicSongEnabledTable[a] = false;
 					end
 				end)
@@ -572,6 +488,7 @@ local function PanelCreation()
 				end)
 			end
 		end
+
 		local BackButton = CreateFrame("Button","BackButton", BloodlustMusic.songpanel,"UIPanelButtonTemplate") --frameType, frameName, frameParent, frameTemplate
 		BackButton:SetWidth(80)
 		BackButton:SetPoint("BOTTOMRIGHT",-10,10)
@@ -613,13 +530,12 @@ Logout_EventFrame:SetScript("OnEvent",
 	end)
 
 --What to do when Addon loads
-local BloodlustStartingFrame = CreateFrame("FRAME", "BloodlustMusic"); -- Need a frame to respond to events
-BloodlustStartingFrame:RegisterEvent("ADDON_LOADED"); -- Fired when saved variables are loaded
---BloodlustStartingFrame:RegisterEvent("PLAYER_LOGOUT"); -- Fired when about to log out
+local BloodlustStartingFrame = CreateFrame("FRAME", "BloodlustMusic"); 
+BloodlustStartingFrame:RegisterEvent("ADDON_LOADED");
 local function BloodlustStartingFrame_OnEvent(self, event, ...)
 	if (event == "ADDON_LOADED") and (... == "BloodlustMusic") then
 		print("Bloodlust Music Ready");
-		-- Our saved variables are ready at this point. If there are none, both variables will set to nil.
+		-- Our saved variables are ready at this point. If a variable is missing, create defaults
 		if (not BloodlustMusicSongEnabledTable) then
 			BloodlustMusicSongEnabledTable = { };
 
