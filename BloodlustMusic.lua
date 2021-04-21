@@ -159,7 +159,6 @@ end)
 
 function StopSong(Showtext)
 	--Stops the song when Hero ends or is cancelled
-	--print(" stop song func")
 	isSongPlaying = false
 	currentSongSpellID = 0
 	StopSound(BloodlustSoundhandle)
@@ -173,8 +172,6 @@ end
 function SongPlayerRepeatable(song)
     currentFilePath = defaultFilePath;
 	currentlyPlaying = announcerHeader ..  "Now Playing: "
-	print("inside SongPlayerRepeatable")
-
 
     if(BloodlustMusicSongEnabledTable[song])
     then
@@ -233,7 +230,6 @@ function SongPlayerPrimer(heroSpellID)
 
 			--generates a random number
 			randomNumber=math.random(1,table.getn(BloodlustMusicSongEnabledTable))
-			print("RNG " .. randomNumber)
 
 			--plays the song
 			SongPlayerRepeatable(randomNumber)
@@ -264,7 +260,6 @@ function f:OnEvent()
 
 		if (event == "SPELL_AURA_APPLIED" and destinationGUID == playerGUID)
 		then
-			--print("Buff applied: " .. spellID .. " " .. spellName)
 			for key,value in pairs(spellIDS) do
 				if (value == spellID)
 				then
@@ -273,7 +268,6 @@ function f:OnEvent()
 			end
 		elseif (event == "SPELL_AURA_REMOVED" and destinationGUID == playerGUID)
 		then
-			--print("Buff Removed: " .. spellID .. " " .. spellName)
 			for key,value in pairs(spellIDS) do
 				if (value == spellID and value == currentSongSpellID)
 				then
@@ -300,7 +294,6 @@ InterfaceOptions_AddCategory(BloodlustMusic.songpanel);
 
 
 local function PanelCreation()
-	print("Inside PanelCreation")
 
     local BloodlustTitle = BloodlustMusic.panel:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
     BloodlustTitle:SetPoint("TOPLEFT", 16, -16)
@@ -308,39 +301,17 @@ local function PanelCreation()
 
     local BloodlustSubtitle = BloodlustMusic.panel:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
     BloodlustSubtitle:SetPoint("TOPLEFT", BloodlustTitle, "RIGHT", 5, 3)
-    --BloodlustSubtitle:SetNonSpaceWrap(true)
-    --BloodlustSubtitle:SetJustifyH("LEFT")
-    --BloodlustSubtitle:SetJustifyV("TOP")
+
     BloodlustSubtitle:SetText("Version 0.2 (alpha)")
 
 	local BloodlustDescription = BloodlustMusic.panel:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
     BloodlustDescription:SetPoint("TOPLEFT", BloodlustTitle, "BOTTOMLEFT", 0, -8)
-	--BloodlustDescription:SetWordWrap(true)
 	BloodlustDescription:SetWidth(600)
 	BloodlustDescription:SetJustifyH("LEFT")
 	BloodlustDescription:SetText("A stupid Addon to play music during Hero, Bloodlust, Primal Rage, etc. You can change a couple of settings below to your liking. Some barebones information is provided next to the corresponding option. For a more in depth explanation, please refer to the description of the addon at: https://addons.wago.io/addons/bloodlustmusic-wip . Thanks and enjoy!")
 
-
-	local PrintButton = CreateFrame("Button","PrintButton", BloodlustMusic.panel,"UIPanelButtonTemplate")
-	PrintButton:SetWidth(128)
-	PrintButton:SetPoint("BOTTOMRIGHT",-10,10)
-	PrintButton.text = _G["PrintButton".."Text"]
-	PrintButton:SetText("Test Print")
-	PrintButton:SetScript("OnClick", function(self, arg1)
-		print("Print Button is pressed");
-		print(BloodlustMusicSongEnabledTable[1])
-		print(BloodlustMusicSongEnabledTable[2])
-		print(BloodlustMusicSongEnabledTable[3])
-		print(table.getn(BloodlustMusicSongEnabledTable))
-		print("Volume during Hero should be: " .. math.floor(BloodlustChannelVolume*100) .. "%")
-		print("Normal Volume level should be: " .. math.floor(BloodlustVolumecache*100) .. "%")
-		print("isSongPlaying  = " .. tostring(isSongPlaying))
-		print("currentSongSpellID = " .. tostring(currentSongSpellID))
-	end)
-
 	local BloodlustSliderDescription = BloodlustMusic.panel:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
     BloodlustSliderDescription:SetPoint("LEFT", 16, 50)
-	--BloodlustDropdownDescription:SetWordWrap(true)
 	BloodlustSliderDescription:SetWidth(600)
 	BloodlustSliderDescription:SetJustifyH("LEFT")
 	BloodlustSliderDescription:SetText("Use the Slider menu below to set how loud the music during Hero should be. Don't want the volume raised? Enter a number lower or equal to your current volume for your soundchannel. You can view this under Main menu -> System -> Sound.")
@@ -366,7 +337,6 @@ local function PanelCreation()
 		BloodlustSlider.text:SetText(math.floor(BloodlustChannelVolume*100) .. "%")
 
 	end)
-	print("create slider")
 	BloodlustSlider:Show()
 
 	local BloodlustSliderLabel = BloodlustMusic.panel:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
@@ -376,7 +346,6 @@ local function PanelCreation()
 
 	local BloodlustDropdownDescription = BloodlustMusic.panel:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
     BloodlustDropdownDescription:SetPoint("TOPLEFT", BloodlustDescription, "BOTTOMLEFT", 0, -30)
-	--BloodlustDropdownDescription:SetWordWrap(true)
 	BloodlustDropdownDescription:SetWidth(600)
 	BloodlustDropdownDescription:SetJustifyH("LEFT")
 	BloodlustDropdownDescription:SetText("Use the Dropdown menu below to set what soundchannel you want Hero to play on. Unsure? Dialog is recommended, Master is more fun.")
@@ -424,7 +393,6 @@ local function PanelCreation()
 
 	local BloodlustMaxSoundchannelDescription = BloodlustMusic.panel:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
     BloodlustMaxSoundchannelDescription:SetPoint("TOPLEFT", BloodlustSlider, "BOTTOMLEFT", -10, -20)
-	--BloodlustMaxSoundchannelDescription:SetWordWrap(true)
 	BloodlustMaxSoundchannelDescription:SetWidth(600)
 	BloodlustMaxSoundchannelDescription:SetJustifyH("LEFT")
 	BloodlustMaxSoundchannelDescription:SetText("Sometimes the music will cut out if stuff gets too busy. You can try to prevent this by checking the box below. This will make sure WoW can play more sounds at the same time, by upping the number of allowed soundchannels. Afterwards it will put it back to normal levels. Highly recommended to check the addon description for more info.")
@@ -448,7 +416,6 @@ local function PanelCreation()
 
 	local BloodlustSongListButtonDescription = BloodlustMusic.panel:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
     BloodlustSongListButtonDescription:SetPoint("TOPLEFT", MaxSoundchannelCheckbox, "BOTTOMLEFT", 0, -15)
-	--BloodlustMaxSoundchannelDescription:SetWordWrap(true)
 	BloodlustSongListButtonDescription:SetWidth(600)
 	BloodlustSongListButtonDescription:SetJustifyH("LEFT")
 	BloodlustSongListButtonDescription:SetText("Want to turn songs on or off? Press the button below to view all songs and click the checkboxes to turn them on or off.")
@@ -459,13 +426,11 @@ local function PanelCreation()
 	SongListButton.text = _G["SongListButton".."Text"]
 	SongListButton:SetText("Song List")
 	SongListButton:SetScript("OnClick", function(self, arg1)
-		print("songListButton is pressed");
 	 	InterfaceOptionsFrame_OpenToCategory(BloodlustMusic.songpanel);
 	end)
 
 	local BloodlustSoundResetDescription = BloodlustMusic.panel:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
     BloodlustSoundResetDescription:SetPoint("TOPLEFT", SongListButton, "BOTTOMLEFT", 0, -15)
-	--BloodlustMaxSoundchannelDescription:SetWordWrap(true)
 	BloodlustSoundResetDescription:SetWidth(600)
 	BloodlustSoundResetDescription:SetJustifyH("LEFT")
 	BloodlustSoundResetDescription:SetText("Sound not reset properly after Hero? Try setting your in-game volume at Main Menu -> System -> Sound to your preferred normal level, then click the button below.")
@@ -476,7 +441,6 @@ local function PanelCreation()
 	SoundResetButton.text = _G["SoundResetButton".."Text"]
 	SoundResetButton:SetText("Sound Reset")
 	SoundResetButton:SetScript("OnClick", function(self, arg1)
-		print("SoundResetButton is pressed");
 		if (isSongPlaying) then
 			print(announcerHeader .. "Resetting prevented, please try again after Hero has ended")
 		else
@@ -516,29 +480,25 @@ local function PanelCreation()
 				RightSongCheckbox.text:SetTextColor(1, 1, 1, 1)
 
 				if (getglobal("SongCheckbox "..a):GetChecked() ~= BloodlustMusicSongEnabledTable[a]) then
-					--print("inside getglobal");
 					getglobal("SongCheckbox "..a):SetChecked(BloodlustMusicSongEnabledTable[a]);
 				end
 
 				RightSongCheckbox:SetScript("OnClick", function(self,event,arg1)
 					if (self:GetChecked()) then
-						--print("set to true");
 						BloodlustMusicSongEnabledTable[a] = true;
 					else
-						--print("set to false");
 						BloodlustMusicSongEnabledTable[a] = false;
 					end
 				end)
 			end
 		end
 
-		local BackButton = CreateFrame("Button","BackButton", BloodlustMusic.songpanel,"UIPanelButtonTemplate") --frameType, frameName, frameParent, frameTemplate
+		local BackButton = CreateFrame("Button","BackButton", BloodlustMusic.songpanel,"UIPanelButtonTemplate")
 		BackButton:SetWidth(80)
 		BackButton:SetPoint("BOTTOMRIGHT",-10,10)
 		BackButton.text = _G["BackButton".."Text"]
 		BackButton:SetText("Back")
 		BackButton:SetScript("OnClick", function(self, arg1)
-			print("BackButton is pressed");
 			 InterfaceOptionsFrame_OpenToCategory(BloodlustMusic.panel);
 		end)
 	
@@ -550,9 +510,6 @@ local Loading_EventFrame = CreateFrame("Frame")
 Loading_EventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 Loading_EventFrame:SetScript("OnEvent",
 	function(self, event, isInitialLogin, isReloadingUi)
-			print(BloodlustMusic.soundChannelNames[BloodlustSoundchannelNumber] .. ": " .. math.floor(BloodlustVolumecache*100) .. "%")
-			print("Loading Event")
-			print(BloodlustSoundhandle .. " stop song reload")
 			StopSong(false)
 			f:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
 			C_Timer.After(1, function()
@@ -573,7 +530,6 @@ local BloodlustStartingFrame = CreateFrame("FRAME", "BloodlustMusic");
 BloodlustStartingFrame:RegisterEvent("ADDON_LOADED");
 local function BloodlustStartingFrame_OnEvent(self, event, ...)
 	if (event == "ADDON_LOADED") and (... == "BloodlustMusic") then
-		print("Bloodlust Music Ready");
 		-- Our saved variables are ready at this point. If a variable is missing, create defaults
 		if (not BloodlustMusicSongEnabledTable) then
 			BloodlustMusicSongEnabledTable = { };
