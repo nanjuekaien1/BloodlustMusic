@@ -299,14 +299,6 @@ InterfaceOptions_AddCategory(BloodlustMusic.songpanel);
 
 
 
-function BloodlustMusic.okay()
-	xpcall(function()
-		print("okay")
-	end, geterrorhandler())
-end
-
-
-
 local function PanelCreation()
 	print("Inside PanelCreation")
 
