@@ -138,6 +138,7 @@ BloodlustMusic.soundEnabledTable = {
 
 }
 BloodlustMusic.isSongPlaying = false
+BloodlustMusic.currentSongSpellID = 0
 BloodlustMusic.announcerHeader = "|cFFff2f00BloodlustMusic:|r "
 
 SLASH_BLOODLUSTMUSIC1, SLASH_BLOODLUSTMUSIC2 = '/blm', '/bloodlust';
@@ -159,7 +160,6 @@ local currentlyPlaying = " "
 local minute = 0
 local songNumber = 0
 local spellIDS = {80353, 32182, 2825, 264667, 146555, 178207, 256740, 230935, 309658, 350249}
-local currentSongSpellID
 
 C_Timer.After(.1, function() -- wait a bit
 	playerGUID = UnitGUID("player");
@@ -169,7 +169,7 @@ function StopSong(Showtext)
 	--Stops the song when Hero ends or is cancelled
 	--print(" stop song func")
 	BloodlustMusic.isSongPlaying = false
-	currentSongSpellID = 0
+	BloodlustMusic.currentSongSpellID = 0
 	StopSound(BloodlustSoundhandle)
 	SetCVar(BloodlustMusic.soundVolumeTable[BloodlustSoundchannelNumber], BloodlustVolumecache)
   	SetCVar("Sound_NumChannels", BloodlustSoundchannelscache)
@@ -199,7 +199,11 @@ function SongPlayerRepeatable(song)
 end
 
 function SongPlayerPrimer(heroSpellID)
-	if (not BloodlustMusic.isSongPlaying) then
+    if (BloodlustMusic.isSongPlaying) then
+        print(BloodlustMusic.announcerHeader .. "A song is already playing.")
+    elseif(BloodlustMusicMute) then
+        print(BloodlustMusic.announcerHeader .. "No song was selected. BloodlustMusic is currently muted.")
+    else
 	--Resetting some variables
 	tried = 0
 	randomNumber = 0
@@ -265,11 +269,9 @@ function SongPlayerPrimer(heroSpellID)
         end
 	else
 		BloodlustMusic.isSongPlaying = true
-		currentSongSpellID = heroSpellID
+		BloodlustMusic.currentSongSpellID = heroSpellID
 		print(currentlyPlaying)
 	end
-else
-	print(BloodlustMusic.announcerHeader .. "A song is already playing.")
 end
 end
 
@@ -280,16 +282,15 @@ function f:OnEvent()
 		then
 			--print("Buff applied: " .. spellID .. " " .. spellName)
 			for key,value in pairs(spellIDS) do
-				if (value == spellID)
-				then
-				SongPlayerPrimer(value);
+				if (value == spellID) then
+				        SongPlayerPrimer(value);
 				end
 			end
 		elseif (event == "SPELL_AURA_REMOVED" and destinationGUID == playerGUID)
 		then
 			--print("Buff Removed: " .. spellID .. " " .. spellName)
 			for key,value in pairs(spellIDS) do
-				if (value == spellID and value == currentSongSpellID)
+				if (value == spellID and value == BloodlustMusic.currentSongSpellID)
 				then
 				StopSong(true);
 				end
@@ -302,17 +303,23 @@ f:SetScript("OnEvent", f.OnEvent);
 
 
 --Main/Options Panel
-BloodlustMusic.panel = CreateFrame( "Frame", "BloodlustMusicPanel", UIParent );
+local panelWidth = InterfaceOptionsFramePanelContainer:GetWidth()
+local panelHeight = InterfaceOptionsFramePanelContainer:GetHeight()
+BloodlustMusic.panel = CreateFrame( "Frame", "BloodlustMusicPanel", UIParent, BackdropTemplateMixin and "BackdropTemplate" );
 BloodlustMusic.panel.name = "BloodlustMusic";
+BloodlustMusic.panel:SetSize(panelWidth, panelHeight);
 InterfaceOptions_AddCategory(BloodlustMusic.panel);
 
+
 -- Song List Panel
+--[[
 BloodlustMusic.songpanel = CreateFrame( "Frame", "BloodlustMusicSongPanel", BloodlustMusic.panel);
 BloodlustMusic.songpanel.name = "Song List";
 BloodlustMusic.songpanel.parent = BloodlustMusic.panel.name;
 InterfaceOptions_AddCategory(BloodlustMusic.songpanel);
+]]
 
--- Song List Panel
+-- Testing Panel
 BloodlustMusic.testpanel = CreateFrame( "Frame", "BloodlustMusicTestPanel", BloodlustMusic.panel);
 BloodlustMusic.testpanel.name = "Testing";
 BloodlustMusic.testpanel.parent = BloodlustMusic.panel.name;

@@ -3,28 +3,58 @@ BloodlustMusic = { };
 
 local function PanelCreation()
 	print("Inside PanelCreation")
-    local BloodlustTitle = BloodlustMusic.panel:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
+	local scrollbarIndent = 35
+	local scrollbarOffset = scrollbarIndent + 20
+    print("Testing Panelcreation")
+--Testcode start
+	BloodlustMusic.panel.scrollFrame = CreateFrame("ScrollFrame", "BloodlustMusicScrollFrame", BloodlustMusic.panel, "UIPanelScrollFrameTemplate");
+	Mixin(BloodlustMusic.panel.scrollFrame, BackdropTemplateMixin)
+	BloodlustMusic.panel.scrollFrame:SetPoint("TOPLEFT", 0, -5 );
+    BloodlustMusic.panel.scrollFrame:SetPoint("BOTTOMRIGHT", -scrollbarIndent, 5);
+	BloodlustMusic.panel.scrollFrame:SetSize(BloodlustMusic.panel:GetWidth(), BloodlustMusic.panel:GetHeight());
+	BloodlustMusic.panel.scrollFrame:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background",
+												edgeFile = "Interface/Tooltips/UI-Tooltip-Border",
+												tile = true, tileSize = 16, edgeSize = 1,
+												insets = { left = 4, right = -30, top = 0, bottom = -1 }});
+	BloodlustMusic.panel.scrollFrame:SetBackdropColor(0,0,0,0.5);
+
+	BloodlustMusic.panel.scrollFrame.scrollbar = _G["BloodlustMusicScrollFrame".."ScrollBar"];
+	Mixin(BloodlustMusic.panel.scrollFrame.scrollbar, BackdropTemplateMixin)
+	BloodlustMusic.panel.scrollFrame.scrollbar:SetWidth(22)
+	BloodlustMusic.panel.scrollFrame.scrollbar:SetBackdrop({bgFile = "Interface/Tooltips/UI-Tooltip-Background",
+														  edgeFile = "Interface/Tooltips/UI-Tooltip-Border",
+														  tile = true, tileSize = 16, edgeSize = 10,
+														  insets = { left = 1, right = 1, top = 2, bottom = 2 }});
+	BloodlustMusic.panel.scrollFrame.scrollbar:SetBackdropColor(0,0,0,1)
+
+
+    BloodlustMusic.panel.scrollChild = CreateFrame("Frame", "BloodlustMusicScrollChild", BloodlustMusic.panel.scrollFrame);
+	BloodlustMusic.panel.scrollFrame:SetScrollChild(BloodlustMusic.panel.scrollChild);
+	BloodlustMusic.panel.scrollChild:SetSize(BloodlustMusic.panel.scrollFrame:GetWidth(), (BloodlustMusic.panel.scrollFrame:GetHeight() * 3 ));
+--Testcode End
+
+    local BloodlustTitle = BloodlustMusic.panel.scrollChild:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
     BloodlustTitle:SetPoint("TOPLEFT", 16, -16)
     BloodlustTitle:SetText("Bloodlust Music")
 
-    local BloodlustSubtitle = BloodlustMusic.panel:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+    local BloodlustSubtitle = BloodlustMusic.panel.scrollChild:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
     BloodlustSubtitle:SetPoint("TOPLEFT", BloodlustTitle, "RIGHT", 5, 3)
     --BloodlustSubtitle:SetNonSpaceWrap(true)
     --BloodlustSubtitle:SetJustifyH("LEFT")
     --BloodlustSubtitle:SetJustifyV("TOP")
     BloodlustSubtitle:SetText("Version 0.2 (alpha)")
 
-	local BloodlustDescription = BloodlustMusic.panel:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
+	local BloodlustDescription = BloodlustMusic.panel.scrollChild:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
     BloodlustDescription:SetPoint("TOPLEFT", BloodlustTitle, "BOTTOMLEFT", 0, -8)
 	--BloodlustDescription:SetWordWrap(true)
-	BloodlustDescription:SetWidth(600)
+	BloodlustDescription:SetWidth(BloodlustMusic.panel.scrollFrame:GetWidth() - scrollbarOffset)
 	BloodlustDescription:SetJustifyH("LEFT")
 	BloodlustDescription:SetText("A stupid Addon to play music during Hero, Bloodlust, Primal Rage, etc. You can change a couple of settings below to your liking. Some barebones information is provided next to the corresponding option. For a more in depth explanation, please refer to the description of the addon at: https://addons.wago.io/addons/bloodlustmusic-wip . Thanks and enjoy!")
 
 
-	local PrintButton = CreateFrame("Button","PrintButton", BloodlustMusic.panel,"UIPanelButtonTemplate")
+	local PrintButton = CreateFrame("Button","PrintButton", BloodlustMusic.panel.scrollChild,"UIPanelButtonTemplate")
 	PrintButton:SetWidth(128)
-	PrintButton:SetPoint("BOTTOMRIGHT",-10,10)
+	PrintButton:SetPoint("BOTTOMRIGHT",-scrollbarIndent ,10)
 	PrintButton.text = _G["PrintButton".."Text"]
 	PrintButton:SetText("Test Print")
 	PrintButton:SetScript("OnClick", function(self, arg1)
@@ -47,18 +77,18 @@ local function PanelCreation()
 		print("Volume during Hero should be: " .. math.floor(BloodlustChannelVolume*100) .. "%")
 		print("Normal Volume level should be: " .. math.floor(BloodlustVolumecache*100) .. "%")
 		--print("BloodlustMusic.isSongPlaying  = " .. tostring(BloodlustMusic.isSongPlaying))
-		--print("currentSongSpellID = " .. tostring(currentSongSpellID))
+		print("currentSongSpellID = " .. tostring(BloodlustMusic.currentSongSpellID))
 	end)
 
-	local BloodlustSliderDescription = BloodlustMusic.panel:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
-    BloodlustSliderDescription:SetPoint("LEFT", 16, 50)
+	local BloodlustSliderDescription = BloodlustMusic.panel.scrollChild:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
+    BloodlustSliderDescription:SetPoint("TOPLEFT", BloodlustTitle, "BOTTOMLEFT", 0, -180)
 	--BloodlustDropdownDescription:SetWordWrap(true)
-	BloodlustSliderDescription:SetWidth(600)
+	BloodlustSliderDescription:SetWidth(BloodlustMusic.panel.scrollFrame:GetWidth() - scrollbarOffset)
 	BloodlustSliderDescription:SetJustifyH("LEFT")
 	BloodlustSliderDescription:SetText("Use the Slider menu below to set how loud the music during Hero should be. Don't want the volume raised? Enter a number lower or equal to your current volume for your soundchannel. You can view this under Main menu -> System -> Sound.")
 
 
-	local BloodlustSlider = CreateFrame("Slider", "BloodlustSliderGlobalName", BloodlustMusic.panel, "OptionsSliderTemplate")
+	local BloodlustSlider = CreateFrame("Slider", "BloodlustSliderGlobalName", BloodlustMusic.panel.scrollChild, "OptionsSliderTemplate")
 	BloodlustSlider:SetPoint("TOPLEFT", BloodlustSliderDescription, "BOTTOMLEFT", 10, -35)
 	BloodlustSlider:SetMinMaxValues(0, 1)
     BloodlustSlider:SetValueStep(0.1)
@@ -70,8 +100,8 @@ local function PanelCreation()
 
     BloodlustSlider.text:SetText(math.floor(BloodlustChannelVolume*100) .. "%")
 	BloodlustSlider:SetValue(BloodlustChannelVolume)
-    BloodlustSlider.low:SetText("0")
-    BloodlustSlider.high:SetText("1")
+    BloodlustSlider.low:SetText("0%")
+    BloodlustSlider.high:SetText("100%")
 	BloodlustSlider.tooltipText = "Volume of " .. BloodlustMusic.soundChannelNames[BloodlustSoundchannelNumber] .. " soundchannel during Hero"
 	BloodlustSlider:SetScript("OnValueChanged", function(self,event,arg1)
 		BloodlustChannelVolume = math.floor(BloodlustSlider:GetValue()*100)/100
@@ -81,21 +111,21 @@ local function PanelCreation()
 	print("create slider")
 	BloodlustSlider:Show()
 
-	local BloodlustSliderLabel = BloodlustMusic.panel:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
+	local BloodlustSliderLabel = BloodlustMusic.panel.scrollChild:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
     BloodlustSliderLabel:SetPoint("LEFT", BloodlustSlider, "TOPLEFT", -1.5, 20)
     BloodlustSliderLabel:SetNonSpaceWrap(true)
 	BloodlustSliderLabel:SetText(BloodlustMusic.soundChannelNames[BloodlustSoundchannelNumber] .. " volume during Hero")
 
-	local BloodlustDropdownDescription = BloodlustMusic.panel:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
+	local BloodlustDropdownDescription = BloodlustMusic.panel.scrollChild:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
     BloodlustDropdownDescription:SetPoint("TOPLEFT", BloodlustDescription, "BOTTOMLEFT", 0, -30)
 	--BloodlustDropdownDescription:SetWordWrap(true)
-	BloodlustDropdownDescription:SetWidth(600)
+	BloodlustDropdownDescription:SetWidth(BloodlustMusic.panel.scrollFrame:GetWidth() - scrollbarOffset)
 	BloodlustDropdownDescription:SetJustifyH("LEFT")
 	BloodlustDropdownDescription:SetText("Use the Dropdown menu below to set what soundchannel you want Hero to play on. Unsure? Dialog is recommended, Master is more fun.")
 
 
 	-- Create the dropdown, and configure its appearance
-	local BloodlustDropdown = CreateFrame("FRAME", "BloodlustDropdown", BloodlustMusic.panel, "UIDropDownMenuTemplate")
+	local BloodlustDropdown = CreateFrame("FRAME", "BloodlustDropdown", BloodlustMusic.panel.scrollChild, "UIDropDownMenuTemplate")
 	BloodlustDropdown:SetPoint("TOPLEFT", BloodlustDropdownDescription, "BOTTOMLEFT", -10, -20)
 	UIDropDownMenu_SetWidth(BloodlustDropdown, 200)
 	UIDropDownMenu_SetText(BloodlustDropdown, "Current soundchannel: " .. BloodlustMusic.soundChannelNames[BloodlustSoundchannelNumber])
@@ -129,19 +159,19 @@ local function PanelCreation()
 		end
 	end
 
-	local BloodlustDropDownLabel = BloodlustMusic.panel:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
+	local BloodlustDropDownLabel = BloodlustMusic.panel.scrollChild:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
     BloodlustDropDownLabel:SetPoint("LEFT", BloodlustDropdown, "TOPLEFT", 20, 7)
     BloodlustDropDownLabel:SetNonSpaceWrap(true)
 	BloodlustDropDownLabel:SetText("Sound Channel")
 
-	local BloodlustMaxSoundchannelDescription = BloodlustMusic.panel:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
+	local BloodlustMaxSoundchannelDescription = BloodlustMusic.panel.scrollChild:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
     BloodlustMaxSoundchannelDescription:SetPoint("TOPLEFT", BloodlustSlider, "BOTTOMLEFT", -10, -20)
 	--BloodlustMaxSoundchannelDescription:SetWordWrap(true)
-	BloodlustMaxSoundchannelDescription:SetWidth(600)
+	BloodlustMaxSoundchannelDescription:SetWidth(BloodlustMusic.panel.scrollFrame:GetWidth() - scrollbarOffset)
 	BloodlustMaxSoundchannelDescription:SetJustifyH("LEFT")
 	BloodlustMaxSoundchannelDescription:SetText("Sometimes the music will cut out if stuff gets too busy. You can try to prevent this by checking the box below. This will make sure WoW can play more sounds at the same time, by upping the number of allowed soundchannels. Afterwards it will put it back to normal levels. Highly recommended to check the addon description for more info.")
 
-	local MaxSoundchannelCheckbox = CreateFrame("CheckButton", "MaxSoundchannelCheckbox", BloodlustMusic.panel, "UICheckButtonTemplate")
+	local MaxSoundchannelCheckbox = CreateFrame("CheckButton", "MaxSoundchannelCheckbox", BloodlustMusic.panel.scrollChild, "UICheckButtonTemplate")
 	MaxSoundchannelCheckbox:SetPoint("TOPLEFT", BloodlustMaxSoundchannelDescription, "BOTTOMLEFT", -0, -10)
 	MaxSoundchannelCheckbox:SetSize(27, 27)
 	MaxSoundchannelCheckbox.text:SetFontObject("GameFontNormal")
@@ -158,14 +188,8 @@ local function PanelCreation()
 		end
 	end)
 
-	local BloodlustSongListButtonDescription = BloodlustMusic.panel:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
-    BloodlustSongListButtonDescription:SetPoint("TOPLEFT", MaxSoundchannelCheckbox, "BOTTOMLEFT", 0, -15)
-	--BloodlustMaxSoundchannelDescription:SetWordWrap(true)
-	BloodlustSongListButtonDescription:SetWidth(600)
-	BloodlustSongListButtonDescription:SetJustifyH("LEFT")
-	BloodlustSongListButtonDescription:SetText("Want to turn songs on or off? Press the button below to view all songs and click the checkboxes to turn them on or off.")
-
-	local SongListButton = CreateFrame("Button","SongListButton", BloodlustMusic.panel,"UIPanelButtonTemplate")
+--[[
+	local SongListButton = CreateFrame("Button","SongListButton", BloodlustMusic.panel.scrollChild,"UIPanelButtonTemplate")
 	SongListButton:SetWidth(128)
 	SongListButton:SetPoint("TOPLEFT", BloodlustSongListButtonDescription, "BOTTOMLEFT", 0, -8)
 	SongListButton.text = _G["SongListButton".."Text"]
@@ -174,15 +198,16 @@ local function PanelCreation()
 		print("songListButton is pressed");
 	 	InterfaceOptionsFrame_OpenToCategory(BloodlustMusic.songpanel);
 	end)
+	]]
 
-	local BloodlustSoundResetDescription = BloodlustMusic.panel:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
-    BloodlustSoundResetDescription:SetPoint("TOPLEFT", SongListButton, "BOTTOMLEFT", 0, -15)
+	local BloodlustSoundResetDescription = BloodlustMusic.panel.scrollChild:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
+    BloodlustSoundResetDescription:SetPoint("TOPLEFT", MaxSoundchannelCheckbox, "BOTTOMLEFT", 0, -15)
 	--BloodlustMaxSoundchannelDescription:SetWordWrap(true)
-	BloodlustSoundResetDescription:SetWidth(600)
+	BloodlustSoundResetDescription:SetWidth(BloodlustMusic.panel.scrollFrame:GetWidth() - scrollbarOffset)
 	BloodlustSoundResetDescription:SetJustifyH("LEFT")
 	BloodlustSoundResetDescription:SetText("Sound not reset properly after Hero? Try setting your in-game volume at Main Menu -> System -> Sound to your preferred normal level, then click the button below.")
 
-	local SoundResetButton = CreateFrame("Button","SoundResetButton", BloodlustMusic.panel,"UIPanelButtonTemplate")
+	local SoundResetButton = CreateFrame("Button","SoundResetButton", BloodlustMusic.panel.scrollChild,"UIPanelButtonTemplate")
 	SoundResetButton:SetWidth(128)
 	SoundResetButton:SetPoint("TOPLEFT", BloodlustSoundResetDescription, "BOTTOMLEFT", 0, -8)
 	SoundResetButton.text = _G["SoundResetButton".."Text"]
@@ -197,54 +222,79 @@ local function PanelCreation()
 		print(BloodlustMusic.announcerHeader .. "Regular volume level for "  .. BloodlustMusic.soundChannelNames[BloodlustSoundchannelNumber] .. " is now set to: " .. math.floor(BloodlustVolumecache*100) .. "%")
 		end
 	end)
+	local TestingPlayButtonDescription = BloodlustMusic.panel.scrollChild:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
+    TestingPlayButtonDescription:SetPoint("TOPLEFT", SoundResetButton, "BOTTOMLEFT", 0, -15)
+	--BloodlustMaxSoundchannelDescription:SetWordWrap(true)
+	TestingPlayButtonDescription:SetWidth(BloodlustMusic.panel.scrollFrame:GetWidth() - scrollbarOffset)
+	TestingPlayButtonDescription:SetJustifyH("LEFT")
+	TestingPlayButtonDescription:SetText("Everything set? Press the button below for a 10 second test of a random song. No other songs can play at the same time.")
+
+	local TestingPlayButton = CreateFrame("Button","TestingPlayButton", BloodlustMusic.panel.scrollChild,"UIPanelButtonTemplate") --frameType, frameName, frameParent, frameTemplate
+	TestingPlayButton:SetWidth(128)
+	TestingPlayButton:SetPoint("TOPLEFT", TestingPlayButtonDescription, "BOTTOMLEFT", 0, -15)
+	TestingPlayButton.text = _G["TestingPlayButton".."Text"]
+	TestingPlayButton:SetText("Play a test song")
+	TestingPlayButton:SetScript("OnClick", function(self, arg1)
+		if (BloodlustMusic.isSongPlaying) then
+			print(BloodlustMusic.announcerHeader .. "Song test prevented. A song is already playing.")
+		elseif(BloodlustMusicMute) then
+			print(BloodlustMusic.announcerHeader .. "Song test prevented. BloodlustMusic is currently muted.")
+		else
+			print(BloodlustMusic.announcerHeader .. "Test song started");
+			SongPlayerPrimer(BloodlustMusic.currentSongSpellID)
+			C_Timer.After(10, function() -- wait a bit
+				StopSong(false)
+			print(BloodlustMusic.announcerHeader .. "Test song stopped")
+			end)
+
+		end
+	end)
+
+	local BloodlustSongListButtonDescription = BloodlustMusic.panel.scrollChild:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
+    BloodlustSongListButtonDescription:SetPoint("TOPLEFT", TestingPlayButton, "BOTTOMLEFT", 0, -15)
+	--BloodlustMaxSoundchannelDescription:SetWordWrap(true)
+	BloodlustSongListButtonDescription:SetWidth(BloodlustMusic.panel.scrollFrame:GetWidth() - scrollbarOffset)
+	BloodlustSongListButtonDescription:SetJustifyH("LEFT")
+	BloodlustSongListButtonDescription:SetText("Want to turn songs on or off? Tick the boxes below if you don't want to hear a certain song. You can always turn them back on later")
+
+
+	local SongCheckboxes = { };
+	for a, c in ipairs(BloodlustMusicSongEnabledTable) do
+		SongCheckboxes[a] = "Checkbox" ..a
+
+	end
 
 	--Create Checkbuttons
-	for a,c in ipairs(BloodlustMusicSongEnabledTable) do
-			if (a < 31) then
-				local LeftSongCheckbox = CreateFrame("CheckButton", "SongCheckbox ".. a, BloodlustMusic.songpanel, "UICheckButtonTemplate")
-				LeftSongCheckbox:SetPoint("TOPLEFT", BloodlustMusic.songpanel, "TOPLEFT", 5, ((a-1)* -18.6))
-				LeftSongCheckbox:SetSize(27, 27)
-				LeftSongCheckbox.text:SetFontObject("GameFontNormal")
-				LeftSongCheckbox.text:SetText(BloodlustMusic.songNameTable[a])
-				LeftSongCheckbox.text:SetTextColor(1, 1, 1, 1)
-
-				if (getglobal("SongCheckbox "..a):GetChecked() ~= BloodlustMusicSongEnabledTable[a]) then
-					getglobal("SongCheckbox "..a):SetChecked(BloodlustMusicSongEnabledTable[a]);
-				end
-
-				LeftSongCheckbox:SetScript("OnClick", function(self,event,arg1)
-					if (self:GetChecked()) then
-						BloodlustMusicSongEnabledTable[a] = true;
-					else
-						BloodlustMusicSongEnabledTable[a] = false;
-					end
-				end)
-			else
-				local RightSongCheckbox = CreateFrame("CheckButton", "SongCheckbox ".. a, BloodlustMusic.songpanel, "UICheckButtonTemplate")
-				RightSongCheckbox:SetPoint("TOPLEFT", BloodlustMusic.songpanel, "TOPLEFT", 290, ((a-31)* -18.6))
-				RightSongCheckbox:SetSize(27, 27)
-				RightSongCheckbox.text:SetFontObject("GameFontNormal")
-				RightSongCheckbox.text:SetText(BloodlustMusic.songNameTable[a])
-				RightSongCheckbox.text:SetTextColor(1, 1, 1, 1)
-
-				if (getglobal("SongCheckbox "..a):GetChecked() ~= BloodlustMusicSongEnabledTable[a]) then
-					--print("inside getglobal");
-					getglobal("SongCheckbox "..a):SetChecked(BloodlustMusicSongEnabledTable[a]);
-				end
-
-				RightSongCheckbox:SetScript("OnClick", function(self,event,arg1)
-					if (self:GetChecked()) then
-						--print("set to true");
-						BloodlustMusicSongEnabledTable[a] = true;
-					else
-						--print("set to false");
-						BloodlustMusicSongEnabledTable[a] = false;
-					end
-				end)
-			end
+	for a,c in ipairs(SongCheckboxes) do
+		SongCheckboxes[a] = CreateFrame("CheckButton", "SongCheckbox ".. a, BloodlustMusic.panel.scrollChild, "UICheckButtonTemplate")
+		if (a == 1) then
+			SongCheckboxes[a]:SetPoint("TOPLEFT", BloodlustSongListButtonDescription, "BOTTOMLEFT", -10, -15)
+		elseif (a == (tostring(math.ceil(table.getn(BloodlustMusicSongEnabledTable)/2))+1)) then
+			SongCheckboxes[a]:SetPoint("LEFT", SongCheckboxes[1].text, "RIGHT", 0, 1.5)
+		else
+			SongCheckboxes[a]:SetPoint("TOPLEFT", SongCheckboxes[a-1].text, "BOTTOMLEFT", -30, (-10))
 		end
 
-		local BackButton = CreateFrame("Button","BackButton", BloodlustMusic.songpanel,"UIPanelButtonTemplate") --frameType, frameName, frameParent, frameTemplate
+		SongCheckboxes[a].text:SetFontObject("GameFontHighlight")
+		SongCheckboxes[a].text:SetText(a .. ". " .. BloodlustMusic.songNameTable[a])
+		SongCheckboxes[a].text:SetWidth((BloodlustMusic.panel.scrollChild:GetWidth()/2) - scrollbarOffset)
+		SongCheckboxes[a].text:SetJustifyH("LEFT")
+
+				if (getglobal("SongCheckbox "..a):GetChecked() ~= BloodlustMusicSongEnabledTable[a]) then
+					getglobal("SongCheckbox "..a):SetChecked(BloodlustMusicSongEnabledTable[a]);
+				end
+
+				SongCheckboxes[a]:SetScript("OnClick", function(self,event,arg1)
+					if (self:GetChecked()) then
+						BloodlustMusicSongEnabledTable[a] = true;
+					else
+						BloodlustMusicSongEnabledTable[a] = false;
+					end
+				end)
+			
+		end
+
+		local BackButton = CreateFrame("Button","BackButton", BloodlustMusic.testpanel,"UIPanelButtonTemplate") --frameType, frameName, frameParent, frameTemplate
 		BackButton:SetWidth(80)
 		BackButton:SetPoint("BOTTOMRIGHT",-10,10)
 		BackButton.text = _G["BackButton".."Text"]
@@ -254,13 +304,73 @@ local function PanelCreation()
 			 InterfaceOptionsFrame_OpenToCategory(BloodlustMusic.panel);
 		end)
 
+		local TestingPanelButton = CreateFrame("Button","TestingPanelButton", BloodlustMusic.panel.scrollChild,"UIPanelButtonTemplate")
+		TestingPanelButton:SetWidth(80)
+		TestingPanelButton:SetPoint("BOTTOMLEFT", 10, 10)
+		TestingPanelButton.text = _G["TestingPanelButton".."Text"]
+		TestingPanelButton:SetText("Test Panel")
+		TestingPanelButton:SetScript("OnClick", function(self, arg1)
+			print("TestingPanelButton is pressed");
+			 InterfaceOptionsFrame_OpenToCategory(BloodlustMusic.testpanel);
+		end)
+	
+	local TestingEditBox = CreateFrame("EditBox", "InputBoxTemplateTest", BloodlustMusic.testpanel, "InputBoxTemplate")
+	TestingEditBox:SetWidth(250)
+	TestingEditBox:SetHeight(20)
+
+	TestingEditBox:SetPoint("TOPLEFT", 30 , -10)
+	TestingEditBox:SetAutoFocus(false)
+	TestingEditBox:SetText("0")
+	TestingEditBox:SetCursorPosition(0)
+	--TestingEditBox:SetNumeric(true)
+
 	local TestingButton = CreateFrame("Button","TestingButton", BloodlustMusic.testpanel,"UIPanelButtonTemplate") --frameType, frameName, frameParent, frameTemplate
 	TestingButton:SetWidth(80)
-	TestingButton:SetPoint("BOTTOMRIGHT",-10,10)
+	TestingButton:SetPoint("LEFT",TestingEditBox, "RIGHT",10, 0)
 	TestingButton.text = _G["TestingButton".."Text"]
 	TestingButton:SetText("Testing")
 	TestingButton:SetScript("OnClick", function(self, arg1)
 		print("TestingButton is pressed");
+		print(tostring(TestingEditBox:GetText()))
+	end)
+--[[
+	local TestingStopButton = CreateFrame("Button","TestingStopButton", BloodlustMusic.testpanel,"UIPanelButtonTemplate") --frameType, frameName, frameParent, frameTemplate
+	TestingStopButton:SetWidth(80)
+	TestingStopButton:SetPoint("TOPLEFT",TestingPlayButton, "BOTTOMLEFT", 0, -20)
+	TestingStopButton.text = _G["TestingStopButton".."Text"]
+	TestingStopButton:SetText("Stop")
+	TestingStopButton:SetScript("OnClick", function(self, arg1)
+		print("TestingStopButton is pressed");
+		if (BloodlustMusic.currentSongSpellID == 0) then
+			StopSong(false)
+		else
+			StopSong(true)
+		end
+	end)
+	]]
+	MuteCheckbox = CreateFrame("CheckButton", "MuteCheckbox", BloodlustMusic.panel.scrollChild, "UICheckButtonTemplate")
+	MuteCheckbox:SetPoint("TOPRIGHT", (-scrollbarOffset - 20), -3)
+	MuteCheckbox.text:SetFontObject("GameFontNormal", "Randomname")
+	--	LeftSongCheckbox.text = _G["LeftSongCheckboxText"..a]
+	MuteCheckbox.text:SetText("Mute")
+	MuteCheckbox.text:SetWidth(300)
+	MuteCheckbox.text:SetJustifyH("LEFT")
+	MuteCheckbox.text:SetTextColor(1, 1, 1, 1)
+	print("test")
+
+	if (getglobal("MuteCheckbox"):GetChecked() ~= BloodlustMusicMute) then
+		getglobal("MuteCheckbox"):SetChecked(BloodlustMusicMute);
+	end
+
+	MuteCheckbox:SetScript("OnClick", function(self,event,arg1)
+		if (self:GetChecked()) then
+			BloodlustMusicMute = true;
+			print(BloodlustMusic.announcerHeader .. "The addon is now muted, no songs will play.")
+		else
+			
+			BloodlustMusicMute = false;
+			print(BloodlustMusic.announcerHeader .. "The addon is now unmuted, enjoy the songs :)")
+		end
 	end)
 
 	end
@@ -313,7 +423,10 @@ local function PanelCreation()
             if(not BloodlustSoundchannelscache) then
                 BloodlustSoundchannelscache = 64
             end
-    
+
+			if(not BloodlustMusicMute) then
+				BloodlustMusicMute = false
+		    end
             PanelCreation()
         end
     end
