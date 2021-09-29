@@ -8,7 +8,7 @@ BloodlustMusic.DefaultSongTable =
 				{Title = "Lynyrd Skynyrd - Freebird", Path = "BirdHero.ogg", Enabled = true}, --4
 				{Title = "Darude - Sandstorm", Path = "SandHero.ogg", Enabled = true}, --5
 				{Title = "Niko - Night of Fire", Path = "NightHero.ogg", Enabled = true}, --6
-				{Title = "The Elephant Rave", Path = "ElephantHHero.ogg", Enabled = true}, --7
+				{Title = "The Elephant Rave", Path = "ElephantHero.ogg", Enabled = true}, --7
 				{Title = "Fartwad - Stereo Saiyan 3D", Path = "SaiyanHero.ogg", Enabled = true}, --8
 				{Title = "The Jellyfish Jam", Path = "JellyfishHero.ogg", Enabled = true}, --9
 				{Title = "Ken Blast - The Top", Path = "TopHero.ogg", Enabled = true}, --10
@@ -36,7 +36,7 @@ BloodlustMusic.DefaultSongTable =
 				{Title = "Go2 - Don't Turn It Off (Chorus)", Path = "DontTurnHero1.ogg", Enabled = true}, --32
 				{Title = "Go2 - Don't Turn It Off (Solo)", Path = "DontTurnHero2.ogg", Enabled = true}, --33
 				{Title = "Eurogroove - Euronight", Path = "EuronightHero.ogg", Enabled = true}, --34
-				{Title = "Fastway - Rock Beatin' Wild", Path = "BeatinWilero.ogg", Enabled = true}, --35
+				{Title = "Fastway - Rock Beatin' Wild", Path = "BeatinWildHero.ogg", Enabled = true}, --35
 				{Title = "Jordan - King Of Eurobeat", Path = "KingHero.ogg", Enabled = true}, --36
 				{Title = "Mark Astley - Super Rider", Path = "SuperRiderHero.ogg", Enabled = true}, --37
 				{Title = "Gordon Jim - Piston Go", Path = "PistonGoHero.ogg", Enabled = true}, --38
@@ -52,16 +52,16 @@ BloodlustMusic.DefaultSongTable =
 				{Title = "Ace - Adrenaline", Path = "AdrenalineHero.ogg", Enabled = true}, --48
 				{Title = "Priscilla - Love is in Danger", Path = "LoveDangerHero.ogg", Enabled = true}, --49
 				{Title = "Sara - Burning Up For You ", Path = "BurningUpHero.ogg", Enabled = true}, --50
-				{Title = "No song implemented", Path = "NoHero.ogg", Enabled = true}, --51
-				{Title = "No song implemented", Path = "NoHero.ogg", Enabled = true}, --52
-				{Title = "No song implemented", Path = "NoHero.ogg", Enabled = true}, --53
+				{Title = "Daniel - Frontal Impact", Path = "ImpactHero.ogg", Enabled = true}, --51
+				{Title = "Fastway - Love Countdown", Path = "CountdownHero.ogg", Enabled = true}, --52
+				{Title = "Symbol - Forever Young", Path = "YoungHero.ogg", Enabled = true}, --53
 				{Title = "No song implemented", Path = "NoHero.ogg", Enabled = true}, --54
 				{Title = "No song implemented", Path = "NoHero.ogg", Enabled = true}, --55
 				{Title = "No song implemented", Path = "NoHero.ogg", Enabled = true}, --56
 				{Title = "No song implemented", Path = "NoHero.ogg", Enabled = true}, --57
 				{Title = "No song implemented", Path = "NoHero.ogg", Enabled = true}, --58
 				{Title = "No song implemented", Path = "NoHero.ogg", Enabled = true}, --59
-				{Title = "No song implemented", Path = "NoHero.ogg", Enabled = true}, --60	
+				{Title = "No song implemented", Path = "NoHero.ogg", Enabled = true}, --60
 }
 
 BloodlustMusic.songPathTable = {
@@ -219,6 +219,7 @@ local tried = 0
 local randomNumber = 0
 local willPlay = 0
 local defaultFilePath = "interface/addons/bloodlustmusic/sounds/"
+local customFilePath = "interface/addons/bloodlustmusic/customsongs/"
 local currentFilePath = " "
 local currentlyPlaying = " "
 local minute = 0
@@ -243,9 +244,15 @@ function StopSong(Showtext)
 end
 
 function SongPlayerRepeatable(song)
-    currentFilePath = defaultFilePath;
+	if BloodlustSongObjectTable[song]["Path"] == BloodlustMusic.DefaultSongTable[song]["Path"] then
+    	currentFilePath = defaultFilePath;
+	else
+		currentFilePath = customFilePath
+	end
+
 	currentlyPlaying = BloodlustMusic.announcerHeader ..  "Now Playing: "
 	print("inside SongPlayerRepeatable")
+	print(currentFilePath)
 
 
     if(BloodlustSongObjectTable[song]["Enabled"])
@@ -262,7 +269,7 @@ function SongPlayerRepeatable(song)
 	willPlay, BloodlustSoundhandle = PlaySoundFile(currentFilePath, BloodlustMusic.soundChannelTable[BloodlustSoundchannelNumber])
 end
 
-function SongPlayerPrimer(heroSpellID)
+function SongPlayerPrimer(heroSpellID, specificSong)
     if (BloodlustMusic.isSongPlaying) then
         print(BloodlustMusic.announcerHeader .. "A song is already playing.")
     elseif(BloodlustMusicMute) then
@@ -272,6 +279,7 @@ function SongPlayerPrimer(heroSpellID)
 	tried = 0
 	randomNumber = 0
 	defaultFilePath = "interface/addons/bloodlustmusic/sounds/"
+	customFilePath = "interface/addons/bloodlustmusic/customsongs/"
 	currentFilePath = " "
 	currentlyPlaying = " "
 	BloodlustVolumecache = tonumber(GetCVar(BloodlustMusic.soundVolumeTable[BloodlustSoundchannelNumber]))
@@ -281,13 +289,17 @@ function SongPlayerPrimer(heroSpellID)
 
 
 	--makes sure songNumber is never zero and makes sure songNumber can't be higher than 47. Lua tables start at 1 and there are only 47 songs
-	songNumber = minute + 1
-	--songNumber = 49
+	if specificSong > 0 then
+		songNumber = specificSong
+	else
+		songNumber = minute + 1
+	end
+		--songNumber = 49
 	if (songNumber > table.getn(BloodlustSongObjectTable))
 	then
-		songNumber = songNumber - (60 - (table.getn(BloodlustSongObjectTable)))
+		songNumber = specificSong - (table.getn(BloodlustSongObjectTable))
 	end
-
+	print("songNumber: " .. songNumber)
 	--plays the song
 	BloodlustVolumecache = tonumber(GetCVar(BloodlustMusic.soundVolumeTable[BloodlustSoundchannelNumber]))
 	BloodlustSoundchannelscache = GetCVar("Sound_NumChannels")
@@ -347,7 +359,7 @@ function f:OnEvent()
 			--print("Buff applied: " .. spellID .. " " .. spellName)
 			for key,value in pairs(spellIDS) do
 				if (value == spellID) then
-				        SongPlayerPrimer(value);
+				        SongPlayerPrimer(value, 0);
 				end
 			end
 		elseif (event == "SPELL_AURA_REMOVED" and destinationGUID == playerGUID)

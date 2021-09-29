@@ -34,7 +34,7 @@ BloodlustMusic.InputPanel.Titletext:SetWordWrap(true)
 BloodlustMusic.InputPanel.TitleEditbox = CreateFrame("EditBox", "InputPanelTitleEditbox", BloodlustMusic.InputPanel, "InputBoxTemplate")
 BloodlustMusic.InputPanel.TitleEditbox:SetWidth(250)
 BloodlustMusic.InputPanel.TitleEditbox:SetHeight(20)
-BloodlustMusic.InputPanel.TitleEditbox:SetMaxLetters(55)
+BloodlustMusic.InputPanel.TitleEditbox:SetMaxLetters(50)
 
 BloodlustMusic.InputPanel.TitleEditbox:SetPoint("TOP", BloodlustMusic.InputPanel.Titletext, "BOTTOM", 0 , -10)
 BloodlustMusic.InputPanel.TitleEditbox:SetAutoFocus(false)
@@ -50,7 +50,7 @@ BloodlustMusic.InputPanel.Pathtext:SetText("Change Song filename to: \n (NB: Nee
 BloodlustMusic.InputPanel.PathEditbox = CreateFrame("EditBox", "InputPanelPathEditbox", BloodlustMusic.InputPanel, "InputBoxTemplate")
 BloodlustMusic.InputPanel.PathEditbox:SetWidth(250)
 BloodlustMusic.InputPanel.PathEditbox:SetHeight(20)
-BloodlustMusic.InputPanel.PathEditbox:SetMaxLetters(55)
+BloodlustMusic.InputPanel.PathEditbox:SetMaxLetters(50)
 
 BloodlustMusic.InputPanel.PathEditbox:SetPoint("TOP", BloodlustMusic.InputPanel.Pathtext, "BOTTOM", 0 , -10)
 BloodlustMusic.InputPanel.PathEditbox:SetAutoFocus(false)
@@ -100,6 +100,7 @@ local function ConfirmPanelCreation()
 	BloodlustMusic.ConfirmPanel.Infotext = BloodlustMusic.ConfirmPanel:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
 	BloodlustMusic.ConfirmPanel.Infotext:SetPoint("CENTER", 0, 50)
 	BloodlustMusic.ConfirmPanel.Infotext:SetWidth(300)
+	BloodlustMusic.ConfirmPanel.Infotext:SetNonSpaceWrap(true)
 	--BloodlustMusic.ConfirmPanel.Infotext:SetText("Yes")
 
 	BloodlustMusic.ConfirmPanel.AcceptButton = CreateFrame("Button", "InputPanelAcceptButton", BloodlustMusic.ConfirmPanel, "UIPanelButtonTemplate")
@@ -416,7 +417,23 @@ local function PanelCreation()
 	--BloodlustMaxSoundchannelDescription:SetWordWrap(true)
 	TestingPlayButtonDescription:SetWidth(BloodlustMusic.panel.scrollFrame:GetWidth() - scrollbarOffset)
 	TestingPlayButtonDescription:SetJustifyH("LEFT")
-	TestingPlayButtonDescription:SetText("Everything set? Press the button below for a 10 second test of a random song. No other songs can play at the same time.")
+	TestingPlayButtonDescription:SetText("Everything set? Press the button below for a 10 second test song. Enter a number between 1 and 60 to test a specific song. Want a random one? Leave it empty or place a 0. Please note: no other songs can play at the same time.")
+
+	local TestingPlayButtonEditbox = CreateFrame("EditBox", "InputBoxTemplateTest", BloodlustMusic.panel.scrollChild, "InputBoxTemplate")
+	TestingPlayButtonEditbox:SetWidth(30)
+	TestingPlayButtonEditbox:SetHeight(20)
+
+	TestingPlayButtonEditbox:SetPoint("TOPLEFT", TestingPlayButtonDescription, "BOTTOMLEFT", 140 , -15.5)
+	TestingPlayButtonEditbox:SetAutoFocus(false)
+	--TestingPlayButtonEditbox:SetText("Testing Addon")
+	TestingPlayButtonEditbox:SetCursorPosition(0)
+	TestingPlayButtonEditbox:SetNumeric(true)
+	TestingPlayButtonEditbox:SetMaxLetters(2)
+
+
+	TestingPlayButtonEditbox:SetScript("OnEnterPressed", function(self)
+		self:ClearFocus(); -- clears focus from editbox, (unlocks key bindings, so pressing W makes your character go forward.
+	end);
 
 	local TestingPlayButton = CreateFrame("Button","TestingPlayButton", BloodlustMusic.panel.scrollChild,"UIPanelButtonTemplate") --frameType, frameName, frameParent, frameTemplate
 	TestingPlayButton:SetWidth(128)
@@ -430,7 +447,7 @@ local function PanelCreation()
 			print(BloodlustMusic.announcerHeader .. "Song test prevented. BloodlustMusic is currently muted.")
 		else
 			print(BloodlustMusic.announcerHeader .. "Test song started");
-			SongPlayerPrimer(BloodlustMusic.currentSongSpellID)
+			SongPlayerPrimer(BloodlustMusic.currentSongSpellID, TestingPlayButtonEditbox:GetNumber())
 			C_Timer.After(10, function() -- wait a bit
 				StopSong(false)
 			print(BloodlustMusic.announcerHeader .. "Test song stopped")
@@ -471,6 +488,7 @@ local function PanelCreation()
 		SongCheckboxes[a].text:SetJustifyH("LEFT")
 		--SongCheckboxes[a].text:SetJustifyV("CENTER")
 		SongCheckboxes[a].text:SetWordWrap(true)
+		SongCheckboxes[a].text:SetNonSpaceWrap(true)
 
 				if (getglobal("SongCheckbox "..a):GetChecked() ~= BloodlustSongObjectTable[a]["Enabled"]) then
 					getglobal("SongCheckbox "..a):SetChecked(BloodlustSongObjectTable[a]["Enabled"]);
@@ -496,7 +514,7 @@ local function PanelCreation()
 		for a,c in ipairs(SongEditButtons) do
 			SongEditButtons[a] = CreateFrame("Button", "SongEditButton ".. a, BloodlustMusic.panel.scrollChild, "UIPanelButtonTemplate")
 		--	if (a == 1) then
-				SongEditButtons[a]:SetPoint("TOPLEFT", SongCheckboxes[a].text, "TOPRIGHT", 0, -2)
+				SongEditButtons[a]:SetPoint("TOPLEFT", SongCheckboxes[a].text, "TOPRIGHT", 0, -1.8)
 			--else
 		--		SongEditButtons[a]:SetPoint("TOPLEFT", SongEditButtons[a-1], "BOTTOMLEFT", 0, (-10))
 		--	end
@@ -533,24 +551,24 @@ local function PanelCreation()
 			ConfirmPanel(nil, "Default", "\n WARNING: This will set all songs back to their default, hard-coded values, even your custom songs. \n \n \n Accept and reload?");
 		end)
 	
-	local TestingEditBox = CreateFrame("EditBox", "InputBoxTemplateTest", BloodlustMusic.testpanel, "InputBoxTemplate")
-	TestingEditBox:SetWidth(250)
-	TestingEditBox:SetHeight(20)
+	local TestingEditbox = CreateFrame("EditBox", "InputBoxTemplateTest", BloodlustMusic.testpanel, "InputBoxTemplate")
+	TestingEditbox:SetWidth(250)
+	TestingEditbox:SetHeight(20)
 
-	TestingEditBox:SetPoint("TOPLEFT", 30 , -10)
-	TestingEditBox:SetAutoFocus(false)
-	TestingEditBox:SetText("0")
-	TestingEditBox:SetCursorPosition(0)
-	--TestingEditBox:SetNumeric(true)
+	TestingEditbox:SetPoint("TOPLEFT", 30 , -10)
+	TestingEditbox:SetAutoFocus(false)
+	TestingEditbox:SetText("0")
+	TestingEditbox:SetCursorPosition(0)
+	--TestingPlayButtonEditbox:SetNumeric(true)
 
 	local TestingButton = CreateFrame("Button","TestingButton", BloodlustMusic.testpanel,"UIPanelButtonTemplate") --frameType, frameName, frameParent, frameTemplate
 	TestingButton:SetWidth(80)
-	TestingButton:SetPoint("LEFT",TestingEditBox, "RIGHT",10, 0)
+	TestingButton:SetPoint("LEFT",TestingEditbox, "RIGHT",10, 0)
 	TestingButton.text = _G["TestingButton".."Text"]
 	TestingButton:SetText("Testing")
 	TestingButton:SetScript("OnClick", function(self, arg1)
 		print("TestingButton is pressed");
-		print(tostring(TestingEditBox:GetText()))
+		print(tostring(TestingEditbox:GetText()))
 	end)
 --[[
 	local TestingStopButton = CreateFrame("Button","TestingStopButton", BloodlustMusic.testpanel,"UIPanelButtonTemplate") --frameType, frameName, frameParent, frameTemplate
