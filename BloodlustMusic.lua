@@ -276,11 +276,16 @@ local Loading_EventFrame = CreateFrame("Frame")
 Loading_EventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 Loading_EventFrame:SetScript("OnEvent",
 	function(self, event, isInitialLogin, isReloadingUi)
-			StopSong(false)
-			f:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
-			C_Timer.After(1, function()
-				f:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
-			end)
+		StopSong(false)
+		f:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
+		C_Timer.After(1, function()
+			f:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
+			if BloodlustMusicShowPanelAfterReload == true then
+				InterfaceOptionsFrame:Show()
+				InterfaceOptionsFrame_OpenToCategory(BloodlustMusic.panel);
+			end
+			BloodlustMusicShowPanelAfterReload = false
+		end)
 	end)
 
 --What to do on Logout

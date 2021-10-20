@@ -119,17 +119,21 @@ local function ConfirmPanel(index, behaviour, text)
 		BloodlustMusic.ConfirmPanel.AcceptButton:SetScript("OnClick", function()
 		BloodlustSongObjectTable[index]["Title"] = tostring(BloodlustMusic.InputPanel.TitleEditbox:GetText())
 		BloodlustSongObjectTable[index]["Path"] = tostring(BloodlustMusic.InputPanel.PathEditbox:GetText())
+		BloodlustMusicShowPanelAfterReload = true
 		ReloadUI();
 		end)
 	elseif behaviour == "Default" then
 		BloodlustMusic.ConfirmPanel.AcceptButton:SetScript("OnClick", function()
 		BloodlustSongObjectTableDefault()
+		BloodlustMusicShowPanelAfterReload = true
 		ReloadUI();
 		end)
 	elseif behaviour == "DefaultSong" then
 		BloodlustMusic.ConfirmPanel.AcceptButton:SetScript("OnClick", function()
 		BloodlustSongObjectTable[index]["Title"] = BloodlustMusic.DefaultSongTable[index]["Title"]
 		BloodlustSongObjectTable[index]["Path"] = BloodlustMusic.DefaultSongTable[index]["Path"]
+		BloodlustSongObjectTable[index]["Enabled"] = BloodlustMusic.DefaultSongTable[index]["Enabled"]
+		BloodlustMusicShowPanelAfterReload = true
 		ReloadUI();
 		end)
 	end
@@ -510,6 +514,9 @@ local function BloodlustStartingFrame_OnEvent(self, event, ...)
 		if(not BloodlustMusicMute) then
 			BloodlustMusicMute = false
 	    end
+		if(not BloodlustMusicShowPanelAfterReload) then
+			BloodlustMusicShowPanelAfterReload = false
+		end
 
 		--Create all the panels
 		InputPanelCreation()
