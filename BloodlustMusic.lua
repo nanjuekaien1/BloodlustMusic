@@ -126,10 +126,7 @@ end)
 
 --Stops the song when Hero ends or is cancelled, resets variables and CVars to previous levels
 function StopSong(Showtext)
-<<<<<<< HEAD
-=======
 	--Stops the song when Hero ends or is cancelled
->>>>>>> 3dbec14966df34568f230822755b3100e0ebdb44
 	BloodlustMusic.isSongPlaying = false
 	BloodlustMusic.currentSongSpellID = 0
 	StopSound(BloodlustSoundhandle)
@@ -140,11 +137,6 @@ function StopSong(Showtext)
 	end
 end
 
-<<<<<<< HEAD
---Repeatable function to play the song
-function SongPlayerRepeatable(song)
-    currentFilePath = defaultFilePath;
-=======
 --Repeatable function to play a song
 function SongPlayerRepeatable(song)
 	--Checks if the desired song is in the default list, and sets the filepath accordingly
@@ -155,7 +147,6 @@ function SongPlayerRepeatable(song)
 		end
 	end
 
->>>>>>> 3dbec14966df34568f230822755b3100e0ebdb44
 	currentlyPlaying = BloodlustMusic.announcerHeader ..  "Now Playing: "
 
     if(BloodlustSongObjectTable[song]["Enabled"])
@@ -170,91 +161,14 @@ function SongPlayerRepeatable(song)
 	willPlay, BloodlustSoundhandle = PlaySoundFile(currentFilePath, BloodlustMusic.soundChannelTable[BloodlustSoundchannelNumber])
 end
 
-<<<<<<< HEAD
---Fundamental logic to prime the addon to play a song, calls SongPlayerRepeatable
-function SongPlayerPrimer(heroSpellID)
-=======
 --First time setup and subsequent logic to play a song
 function SongPlayerPrimer(heroSpellID, specificSong)
 	--Checks if a song is playing, or if the addon is muted
->>>>>>> 3dbec14966df34568f230822755b3100e0ebdb44
     if (BloodlustMusic.isSongPlaying) then
         print(BloodlustMusic.announcerHeader .. "A song is already playing.")
     elseif(BloodlustMusicMute) then
         print(BloodlustMusic.announcerHeader .. "No song was selected. BloodlustMusic is currently muted.")
     else
-<<<<<<< HEAD
-	    --Resetting some variables
-	    tried = 0
-	    randomNumber = 0
-	    defaultFilePath = "interface/addons/bloodlustmusic/sounds/"
-	    currentFilePath = " "
-	    currentlyPlaying = " "
-	    BloodlustVolumecache = tonumber(GetCVar(BloodlustMusic.soundVolumeTable[BloodlustSoundchannelNumber]))
-
-	    --gets the current local time (minute)
-	    minute = (date("%M"))
-
-
-	    --makes sure songNumber is never zero and makes sure songNumber can't be higher than 47. Lua tables start at 1 and there are only 47 songs
-	    songNumber = minute + 1
-	    if (songNumber > table.getn(BloodlustMusicSongEnabledTable))
-	    then
-	    	songNumber = songNumber - (60 - (table.getn(BloodlustMusicSongEnabledTable)))
-	    end
-
-	    --plays the song
-	    BloodlustVolumecache = tonumber(GetCVar(BloodlustMusic.soundVolumeTable[BloodlustSoundchannelNumber]))
-	    BloodlustSoundchannelscache = GetCVar("Sound_NumChannels")
-
-	    SetCVar(BloodlustMusic.soundVolumeTable[BloodlustSoundchannelNumber], BloodlustVolumecache < BloodlustChannelVolume and BloodlustChannelVolume or BloodlustVolumecache)
-
-
-	    if (BloodlustMaxSoundchannelBoolean) then
-  	    	SetCVar("Sound_NumChannels", 128)
-	    end
-
-	    SongPlayerRepeatable(songNumber)
-
-	    --checks if song actually played
-	    if(not willPlay == true)
-	    then
-	    	--if song didn't play, a random one is selected below
-	    	repeat
-
-	    		--generates a random number
-	    		randomNumber=math.random(1,table.getn(BloodlustMusicSongEnabledTable))
-
-	    		--plays the song
-	    		SongPlayerRepeatable(randomNumber)
-	    		tried = tried + 1
-
-	    		--ends the loop if a song played or after 20 tries
-	    	until((not willPlay == false) or (tried >= 20))
-	    end
-
-	    --displays the current song playing, or that it failed to play any
-	    if(tried >= 20)
-	    then
-	    	BloodlustSoundhandle = 0
-	    	StopSong(false)
-           if(tonumber(GetCVar(BloodlustMusic.soundEnabledTable[BloodlustSoundchannelNumber]))== 0) then
-                print(BloodlustMusic.announcerHeader .. "No song was selected. Your " .. BloodlustMusic.soundChannelNames[BloodlustSoundchannelNumber] .. " volume channel is muted.")
-           elseif (tonumber(GetCVar("Sound_EnableAllSound"))== 0) then
-                print(BloodlustMusic.announcerHeader .. "No song was selected. Your WoW sound is muted.")
-          else
-	    	    print(BloodlustMusic.announcerHeader .. "No song was selected. The Addon can't find any songs, or you've disabled too many.")
-          end
-	    else
-	    	BloodlustMusic.isSongPlaying = true
-	    	BloodlustMusic.currentSongSpellID = heroSpellID
-            print(currentlyPlaying)
-	    end
-    end
-end
-
---Event to listen to all buffs on player, filters out Bloodlusts
-=======
 
 		--Resetting some variables
 		tried = 0
@@ -325,7 +239,6 @@ end
 
 
 --listens for all Events, and filters out the player obtaining or removing a hero buff
->>>>>>> 3dbec14966df34568f230822755b3100e0ebdb44
 function f:OnEvent()
 	local _, event, _, _, _, _, _, destinationGUID, _, _, _, spellID, spellName, _, _ = CombatLogGetCurrentEventInfo();
 
@@ -363,13 +276,6 @@ local Loading_EventFrame = CreateFrame("Frame")
 Loading_EventFrame:RegisterEvent("PLAYER_ENTERING_WORLD")
 Loading_EventFrame:SetScript("OnEvent",
 	function(self, event, isInitialLogin, isReloadingUi)
-<<<<<<< HEAD
-			StopSong(false)
-			f:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
-			C_Timer.After(1, function()
-				f:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
-			end)
-=======
 		StopSong(false)
 		f:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
 		C_Timer.After(1, function()
@@ -380,7 +286,6 @@ Loading_EventFrame:SetScript("OnEvent",
 			end
 			BloodlustMusicShowPanelAfterReload = false
 		end)
->>>>>>> 3dbec14966df34568f230822755b3100e0ebdb44
 	end)
 
 --What to do on Logout
