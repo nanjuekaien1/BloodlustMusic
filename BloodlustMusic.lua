@@ -51,7 +51,7 @@ BloodlustMusic.DefaultSongTable =
 				{Title = "Go2 & DJ Boss - Superstar", Path = "SuperstarHero.ogg", Enabled = true}, --47
 				{Title = "Ace - Adrenaline", Path = "AdrenalineHero.ogg", Enabled = true}, --48
 				{Title = "Priscilla - Love is in Danger", Path = "LoveDangerHero.ogg", Enabled = true}, --49
-				{Title = "Sara - Burning Up For You ", Path = "BurningUpHero.ogg", Enabled = true}, --50
+				{Title = "Sara - Burning Up For You", Path = "BurningUpHero.ogg", Enabled = true}, --50
 				{Title = "Daniel - Frontal Impact", Path = "ImpactHero.ogg", Enabled = true}, --51
 				{Title = "Fastway - Love Countdown", Path = "CountdownHero.ogg", Enabled = true}, --52
 				{Title = "Symbol - Forever Young", Path = "YoungHero.ogg", Enabled = true}, --53

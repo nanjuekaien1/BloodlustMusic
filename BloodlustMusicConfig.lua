@@ -1,5 +1,6 @@
 BloodlustMusic = { };
 
+--function to set the main table to default values
 local function BloodlustSongObjectTableDefault()
 	BloodlustSongObjectTable = {}
 	for a, c in ipairs(BloodlustMusic.DefaultSongTable) do
@@ -8,6 +9,7 @@ local function BloodlustSongObjectTableDefault()
 
 end
 
+--Creating the panel to input changes to songs, massive spaghetti
 local function InputPanelCreation()
 	BloodlustMusic.InputPanel = CreateFrame("Frame", "InputPanel", UIParent, "UIPanelDialogTemplate")
 	BloodlustMusic.InputPanel.text = "Testing Input"
@@ -76,6 +78,7 @@ local function InputPanelCreation()
 
 end
 
+--creates a panel to confirm pending changes
 local function ConfirmPanelCreation()
 	BloodlustMusic.ConfirmPanel = CreateFrame("Frame", "ConfirmPanel", UIParent, "UIPanelDialogTemplate")
 	BloodlustMusic.ConfirmPanel.text = "Testing Input"
@@ -111,6 +114,7 @@ local function ConfirmPanelCreation()
 
 end
 
+--shows the Confirmpanel
 local function ConfirmPanel(index, behaviour, text)
 	BloodlustMusic.ConfirmPanel:Hide()
 	BloodlustMusic.ConfirmPanel.Infotext:SetText(text)
@@ -141,6 +145,7 @@ local function ConfirmPanel(index, behaviour, text)
 	BloodlustMusic.ConfirmPanel:Show()
 end
 
+--shows the InputPanel
 local function InputPanel(index)
 	BloodlustMusic.InputPanel:Hide()
 
@@ -159,7 +164,7 @@ local function InputPanel(index)
 end
 
 
-
+--massive spaghetti function to create the interface panel
 local function PanelCreation()
 	local SongEditButtonWidth = 35
 	local scrollbarIndent = 35
@@ -386,7 +391,6 @@ local function PanelCreation()
 	local SongCheckboxes = { };
 	for a, c in ipairs(BloodlustSongObjectTable) do
 		SongCheckboxes[a] = "Checkbox" ..a
-
 	end
 
 	--Creates a checkbox for every song
