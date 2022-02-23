@@ -1,4 +1,4 @@
-## Interface: 90105
+## Interface: 90200
 ## Title: Bloodlust Music
 ## Notes: A bloated, over-engineered Addon that plays music during Bloodlust
 ## Author: Yellowdevil-Draenor
