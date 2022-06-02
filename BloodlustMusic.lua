@@ -227,7 +227,7 @@ function SongPlayerPrimer(heroSpellID, specificSong)
   	      elseif (tonumber(GetCVar("Sound_EnableAllSound"))== 0) then
   	          print(BloodlustMusic.announcerHeader .. "No song was selected. Your WoW sound is muted.")
   	      else
-			    print(BloodlustMusic.announcerHeader .. "No song was selected. The Addon can't find any songs, or you've disabled too many.")
+			    print(BloodlustMusic.announcerHeader .. "No song was selected. The Addon can't find any songs, you've disabled too many or your computer's sound is muted. I think? idk man.")
   	      end
 		else
 			BloodlustMusic.isSongPlaying = true
