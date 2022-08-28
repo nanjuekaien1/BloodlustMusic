@@ -1,9 +1,9 @@
-## Interface: 90205
+## Interface: 90207
 ## Title: Bloodlust Music
 ## Notes: A bloated, over-engineered Addon that plays music during Bloodlust
 ## Author: Yellowdevil-ArgentDawn
 ## Version: 1.1
-## SavedVariables: BloodlustSoundchannelNumber, BloodlustVolumecache, BloodlustSoundhandle, BloodlustChannelVolume, BloodlustMaxSoundchannelBoolean, BloodlustSoundchannelscache, BloodlustMusicMute, BloodlustSongObjectTable, BloodlustMusicShowPanelAfterReload
+## SavedVariables: BloodlustSoundchannelNumber, BloodlustVolumecache, BloodlustSoundhandle, BloodlustChannelVolume, BloodlustMaxSoundchannelBoolean, BloodlustSoundchannelscache, BloodlustMusicMute, BloodlustSongObjectTable, BloodlustMusicShowPanelAfterReload, BloodlustFavoredFriendTable
 
 BloodlustMusicConfig.lua
 BloodlustMusic.lua

@@ -9,6 +9,100 @@ local function BloodlustSongObjectTableDefault()
 
 end
 
+--function to set the friend table to the default value
+local function BloodlustFavoredFriendTableDefault()
+	BloodlustFavoredFriendTable = {}
+	for a, c in ipairs(BloodlustMusic.DefaultFavoredFriendTable) do
+		BloodlustFavoredFriendTable[a] = BloodlustMusic.DefaultFavoredFriendTable[a]
+	end
+
+end
+
+--Creating a friendpanel to input changes to the friendlist
+local function FriendPanelCreation()
+	BloodlustMusic.FriendPanel = CreateFrame("Frame", "FriendPanel", UIParent, "UIPanelDialogTemplate")
+	BloodlustMusic.FriendPanel.text = "Testing Friends"
+	BloodlustMusic.FriendPanel:SetSize(400, 400)
+	BloodlustMusic.FriendPanel:SetPoint("CENTER")
+	BloodlustMusic.FriendPanel:SetToplevel(true)
+	BloodlustMusic.FriendPanel:SetFrameStrata("DIALOG")
+	BloodlustMusic.FriendPanel:EnableMouse(true)
+	BloodlustMusic.FriendPanel:SetMovable(false)
+	BloodlustMusic.FriendPanel:Hide()
+
+	BloodlustMusic.FriendPanel.Maintext = BloodlustMusic.FriendPanel:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+	BloodlustMusic.FriendPanel.Maintext:SetPoint("TOP", BloodlustMusic.FriendPanel, "TOP", 0 , -9)
+	BloodlustMusic.FriendPanel.Maintext:SetText("Bloodlust Music")
+
+	BloodlustMusic.FriendPanel.Nametext = BloodlustMusic.FriendPanel:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
+	BloodlustMusic.FriendPanel.Nametext:SetPoint("TOP", BloodlustMusic.FriendPanel, "TOP", 0 , -40)
+	BloodlustMusic.FriendPanel.Nametext:SetText("Favored Friend Name: ")
+	BloodlustMusic.FriendPanel.Nametext:SetWordWrap(true)
+
+	BloodlustMusic.FriendPanel.NameEditbox = CreateFrame("EditBox", "FriendPanelNameEditbox", BloodlustMusic.FriendPanel, "InputBoxTemplate")
+	BloodlustMusic.FriendPanel.NameEditbox:SetWidth(250)
+	BloodlustMusic.FriendPanel.NameEditbox:SetHeight(20)
+	BloodlustMusic.FriendPanel.NameEditbox:SetMaxLetters(50)
+
+	BloodlustMusic.FriendPanel.NameEditbox:SetPoint("TOP", BloodlustMusic.FriendPanel.Nametext, "BOTTOM", 0 , -10)
+	BloodlustMusic.FriendPanel.NameEditbox:SetAutoFocus(false)
+	BloodlustMusic.FriendPanel.NameEditbox:SetScript("OnEnterPressed", function(self)
+		self:ClearFocus();
+	end);
+
+	BloodlustMusic.FriendPanel.Titletext = BloodlustMusic.FriendPanel:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
+	BloodlustMusic.FriendPanel.Titletext:SetPoint("TOP", BloodlustMusic.FriendPanel.NameEditbox, "BOTTOM", 0 , -20)
+	BloodlustMusic.FriendPanel.Titletext:SetText("Favored Friend Song Title: ")
+	BloodlustMusic.FriendPanel.Titletext:SetWordWrap(true)
+
+	BloodlustMusic.FriendPanel.TitleEditbox = CreateFrame("EditBox", "FriendPanelTitleEditbox", BloodlustMusic.FriendPanel, "InputBoxTemplate")
+	BloodlustMusic.FriendPanel.TitleEditbox:SetWidth(250)
+	BloodlustMusic.FriendPanel.TitleEditbox:SetHeight(20)
+	BloodlustMusic.FriendPanel.TitleEditbox:SetMaxLetters(50)
+
+	BloodlustMusic.FriendPanel.TitleEditbox:SetPoint("TOP", BloodlustMusic.FriendPanel.Titletext, "BOTTOM", 0 , -10)
+	BloodlustMusic.FriendPanel.TitleEditbox:SetAutoFocus(false)
+	BloodlustMusic.FriendPanel.TitleEditbox:SetScript("OnEnterPressed", function(self)
+		self:ClearFocus();
+	end);
+
+	BloodlustMusic.FriendPanel.Pathtext = BloodlustMusic.FriendPanel:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
+	BloodlustMusic.FriendPanel.Pathtext:SetPoint("TOP", BloodlustMusic.FriendPanel.TitleEditbox, "BOTTOM", 0, -20)
+	BloodlustMusic.FriendPanel.Pathtext:SetWidth(350)
+	BloodlustMusic.FriendPanel.Pathtext:SetText("Favored Friend filename: \n |cFFFFD100(NB: Needs filetype in the name, .ogg is most common. Also make sure the file for any custom song is in the 'customsongs' folder, not the 'sounds' folder)|r")
+	BloodlustMusic.FriendPanel.Pathtext:SetWordWrap(true)
+
+	BloodlustMusic.FriendPanel.PathEditbox = CreateFrame("EditBox", "FriendPanelPathEditbox", BloodlustMusic.FriendPanel, "InputBoxTemplate")
+	BloodlustMusic.FriendPanel.PathEditbox:SetWidth(250)
+	BloodlustMusic.FriendPanel.PathEditbox:SetHeight(20)
+	BloodlustMusic.FriendPanel.PathEditbox:SetMaxLetters(50)
+
+	BloodlustMusic.FriendPanel.PathEditbox:SetPoint("TOP", BloodlustMusic.FriendPanel.Pathtext, "BOTTOM", 0 , -10)
+	BloodlustMusic.FriendPanel.PathEditbox:SetAutoFocus(false)
+	BloodlustMusic.FriendPanel.PathEditbox:SetScript("OnEnterPressed", function(self)
+		self:ClearFocus();
+	end);
+
+	BloodlustMusic.FriendPanel.DefaultButton = CreateFrame("Button", "FriendPanelDefaultButton", BloodlustMusic.FriendPanel, "UIPanelButtonTemplate")
+	BloodlustMusic.FriendPanel.DefaultButton:SetText("Reset to Default")
+	BloodlustMusic.FriendPanel.DefaultButton:SetWidth(128)
+	BloodlustMusic.FriendPanel.DefaultButton:SetPoint("BOTTOM", BloodlustMusic.FriendPanel, "BOTTOM", 0, 100)
+
+	BloodlustMusic.FriendPanel.AcceptButton = CreateFrame("Button", "FriendPanelAcceptButton", BloodlustMusic.FriendPanel, "UIPanelButtonTemplate")
+	BloodlustMusic.FriendPanel.AcceptButton:SetText("Accept")
+	BloodlustMusic.FriendPanel.AcceptButton:SetWidth(128)
+	BloodlustMusic.FriendPanel.AcceptButton:SetPoint("BOTTOMLEFT", BloodlustMusic.FriendPanel, "BOTTOMLEFT", 30, 30)
+
+	BloodlustMusic.FriendPanel.CancelButton = CreateFrame("Button", "FriendPanelCancelButton", BloodlustMusic.FriendPanel, "UIPanelButtonTemplate")
+	BloodlustMusic.FriendPanel.CancelButton:SetText("Cancel")
+	BloodlustMusic.FriendPanel.CancelButton:SetWidth(128)
+	BloodlustMusic.FriendPanel.CancelButton:SetPoint("BOTTOMRIGHT", BloodlustMusic.FriendPanel, "BOTTOMRIGHT", -30, 30)
+	BloodlustMusic.FriendPanel.CancelButton:SetScript("OnClick", function()
+		BloodlustMusic.FriendPanel:Hide()
+	end)
+
+end
+
 --Creating the panel to input changes to songs, massive spaghetti
 local function InputPanelCreation()
 	BloodlustMusic.InputPanel = CreateFrame("Frame", "InputPanel", UIParent, "UIPanelDialogTemplate")
@@ -118,32 +212,77 @@ end
 local function ConfirmPanel(index, behaviour, text)
 	BloodlustMusic.ConfirmPanel:Hide()
 	BloodlustMusic.ConfirmPanel.Infotext:SetText(text)
-
+	
 	if behaviour == "Accept" then
 		BloodlustMusic.ConfirmPanel.AcceptButton:SetScript("OnClick", function()
-		BloodlustSongObjectTable[index]["Title"] = tostring(BloodlustMusic.InputPanel.TitleEditbox:GetText())
-		BloodlustSongObjectTable[index]["Path"] = tostring(BloodlustMusic.InputPanel.PathEditbox:GetText())
-		BloodlustMusicShowPanelAfterReload = true
-		ReloadUI();
+			BloodlustSongObjectTable[index]["Title"] = tostring(BloodlustMusic.InputPanel.TitleEditbox:GetText())
+			BloodlustSongObjectTable[index]["Path"] = tostring(BloodlustMusic.InputPanel.PathEditbox:GetText())
+			BloodlustMusicShowPanelAfterReload = true
+			ReloadUI();
 		end)
-	elseif behaviour == "Default" then
+	elseif behaviour == "AcceptFriend" then
 		BloodlustMusic.ConfirmPanel.AcceptButton:SetScript("OnClick", function()
-		BloodlustSongObjectTableDefault()
-		BloodlustMusicShowPanelAfterReload = true
-		ReloadUI();
+			BloodlustFavoredFriendTable[index]["Name"] = tostring(BloodlustMusic.FriendPanel.NameEditbox:GetText())	
+			BloodlustFavoredFriendTable[index]["Title"] = tostring(BloodlustMusic.FriendPanel.TitleEditbox:GetText())
+			BloodlustFavoredFriendTable[index]["Path"] = tostring(BloodlustMusic.FriendPanel.PathEditbox:GetText())
+			BloodlustFavoredFriendTable[index]["Enabled"] = true;
+			BloodlustMusicShowPanelAfterReload = true
+			ReloadUI();
+		end)		
+	elseif behaviour == "Default" then
+			BloodlustMusic.ConfirmPanel.AcceptButton:SetScript("OnClick", function()
+			BloodlustSongObjectTableDefault()
+			BloodlustMusicShowPanelAfterReload = true
+			ReloadUI();
 		end)
 	elseif behaviour == "DefaultSong" then
 		BloodlustMusic.ConfirmPanel.AcceptButton:SetScript("OnClick", function()
-		BloodlustSongObjectTable[index]["Title"] = BloodlustMusic.DefaultSongTable[index]["Title"]
-		BloodlustSongObjectTable[index]["Path"] = BloodlustMusic.DefaultSongTable[index]["Path"]
-		BloodlustSongObjectTable[index]["Enabled"] = BloodlustMusic.DefaultSongTable[index]["Enabled"]
-		BloodlustMusicShowPanelAfterReload = true
-		ReloadUI();
+			BloodlustSongObjectTable[index]["Title"] = BloodlustMusic.DefaultSongTable[index]["Title"]
+			BloodlustSongObjectTable[index]["Path"] = BloodlustMusic.DefaultSongTable[index]["Path"]
+			BloodlustSongObjectTable[index]["Enabled"] = BloodlustMusic.DefaultSongTable[index]["Enabled"]
+			BloodlustMusicShowPanelAfterReload = true
+			ReloadUI();
 		end)
+	elseif behaviour == "DefaultFriend" then
+		BloodlustMusic.ConfirmPanel.AcceptButton:SetScript("OnClick", function()
+			BloodlustFavoredFriendTable[index]["Name"] = BloodlustMusic.DefaultFavoredFriendTable[index]["Name"]	
+			BloodlustFavoredFriendTable[index]["Title"] = BloodlustMusic.DefaultFavoredFriendTable[index]["Title"]
+			BloodlustFavoredFriendTable[index]["Path"] = BloodlustMusic.DefaultFavoredFriendTable[index]["Path"]
+			BloodlustFavoredFriendTable[index]["Enabled"] = BloodlustMusic.DefaultFavoredFriendTable[index]["Enabled"]
+			BloodlustMusicShowPanelAfterReload = true
+			ReloadUI();
+		end)	
+	elseif behaviour == "DefaultAllFriends" then
+		BloodlustMusic.ConfirmPanel.AcceptButton:SetScript("OnClick", function()
+			BloodlustFavoredFriendTableDefault()
+			BloodlustMusicShowPanelAfterReload = true
+			ReloadUI();
+		end)		
 	end
 
 	BloodlustMusic.ConfirmPanel:Show()
 end
+
+--shows the FriendPanel
+local function FriendPanel(index)
+	BloodlustMusic.FriendPanel:Hide()
+
+	BloodlustMusic.FriendPanel.NameEditbox:SetText(BloodlustFavoredFriendTable[index]["Name"])
+	BloodlustMusic.FriendPanel.TitleEditbox:SetText(BloodlustFavoredFriendTable[index]["Title"])
+	BloodlustMusic.FriendPanel.PathEditbox:SetText(BloodlustFavoredFriendTable[index]["Path"])
+
+	BloodlustMusic.FriendPanel.DefaultButton:SetScript("OnClick", function()
+		ConfirmPanel(index, "DefaultFriend", "\n \nThis will set this song back to its default, hard-coded values. \n \n|cFFFFD100'" .. BloodlustFavoredFriendTable[index]["Name"] .. "'|r\n turns back to \n|cFFFFD100'" .. BloodlustMusic.DefaultFavoredFriendTable[index]["Name"] .. "'|r \n \n \n|cFFFFD100'" .. BloodlustFavoredFriendTable[index]["Title"] .. "'|r\n turns back to \n|cFFFFD100'" .. BloodlustMusic.DefaultFavoredFriendTable[index]["Title"] .. "'|r \n \n \n|cFFFFD100'" .. BloodlustFavoredFriendTable[index]["Path"] .. "'|r\n turns back to \n|cFFFFD100'" .. BloodlustMusic.DefaultFavoredFriendTable[index]["Path"] .. "'|r\n \n \n Accept and reload?")
+	end)
+
+	BloodlustMusic.FriendPanel.AcceptButton:SetScript("OnClick", function()
+		ConfirmPanel(index, "AcceptFriend", "\n \nPending changes: \n \n|cFFFFD100'" .. BloodlustFavoredFriendTable[index]["Name"] .. "'|r\n becomes \n|cFFFFD100'" .. tostring(BloodlustMusic.FriendPanel.NameEditbox:GetText()) .. "'|r \n \n \n|cFFFFD100'" .. BloodlustFavoredFriendTable[index]["Title"] .. "'|r\n  becomes  \n|cFFFFD100'" .. tostring(BloodlustMusic.FriendPanel.TitleEditbox:GetText()) .. "'|r \n \n \n|cFFFFD100'" .. BloodlustFavoredFriendTable[index]["Path"] .. "'|r\n  becomes  \n|cFFFFD100'" .. tostring(BloodlustMusic.FriendPanel.PathEditbox:GetText()) .. "'|r\n \n \n Accept and reload?")
+	end)
+
+	BloodlustMusic.FriendPanel:Show()
+end
+
+
 
 --shows the InputPanel
 local function InputPanel(index)
@@ -194,7 +333,7 @@ local function PanelCreation()
 
     BloodlustMusic.panel.scrollChild = CreateFrame("Frame", "BloodlustMusicScrollChild", BloodlustMusic.panel.scrollFrame);
 	BloodlustMusic.panel.scrollFrame:SetScrollChild(BloodlustMusic.panel.scrollChild);
-	BloodlustMusic.panel.scrollChild:SetSize(BloodlustMusic.panel.scrollFrame:GetWidth(), (BloodlustMusic.panel.scrollFrame:GetHeight() * 3.5 ));
+	BloodlustMusic.panel.scrollChild:SetSize(BloodlustMusic.panel.scrollFrame:GetWidth(), (BloodlustMusic.panel.scrollFrame:GetHeight() * 4 ));
 
 
 	--Titles and descriptions
@@ -372,13 +511,14 @@ local function PanelCreation()
 			print(BloodlustMusic.announcerHeader .. "Song test prevented. BloodlustMusic is currently muted.")
 		else
 			print(BloodlustMusic.announcerHeader .. "Test song started");
-			SongPlayerPrimer(BloodlustMusic.currentSongSpellID, TestingPlayButtonEditbox:GetNumber())
+			SongPlayerPrimer(BloodlustMusic.currentSongSpellID, TestingPlayButtonEditbox:GetNumber(), 0)
 			C_Timer.After(10, function() -- wait a bit
 				StopSong(false)
 			print(BloodlustMusic.announcerHeader .. "Test song stopped")
 			end)
 		end
 	end)
+
 
 	--Description for song list
 	local BloodlustSongListButtonDescription = BloodlustMusic.panel.scrollChild:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
@@ -448,13 +588,122 @@ local function PanelCreation()
 	--Button to set ALL songs to default
 	local SongDefaultButton = CreateFrame("Button","SongDefaultButton", BloodlustMusic.panel.scrollChild,"UIPanelButtonTemplate")
 	SongDefaultButton:SetWidth(170)
-	SongDefaultButton:SetPoint("CENTER", SongEditButtons[(math.ceil(table.getn(BloodlustSongObjectTable)/2))], "BOTTOMRIGHT",  0, -50)
+	SongDefaultButton:SetPoint("CENTER", SongEditButtons[(math.ceil(table.getn(BloodlustSongObjectTable)/2))], "BOTTOMRIGHT",  0, -40)
 	SongDefaultButton.text = _G["SongDefaultButton".."Text"]
 	SongDefaultButton:SetText("Set all songs to default")
 	SongDefaultButton:SetScript("OnClick", function(self, arg1)
 		ConfirmPanel(nil, "Default", "\n |cFFFFD100WARNING:|r This will set all songs back to their default, hard-coded values, even your custom songs. \n \n \n This action cannot be reversed and any change you have made to any song will have to be entered manually again. \n \n \n Accept and reload?");
 	end)
 
+	--Description for the Favored Friend feature
+	local FavoredFriendDescription = BloodlustMusic.panel.scrollChild:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
+    FavoredFriendDescription:SetPoint("TOPLEFT", SongCheckboxes[(math.ceil(table.getn(BloodlustSongObjectTable)/2))], "BOTTOMLEFT", 10 , -60)
+	FavoredFriendDescription:SetWidth(BloodlustMusic.panel.scrollFrame:GetWidth() - scrollbarOffset)
+	FavoredFriendDescription:SetJustifyH("LEFT")
+	FavoredFriendDescription:SetText("Want to hear a certain song when a certain player casts Hero? You can by using the Favored Friend feature below. Just click the edit button and enter some values in the screen that pops up. You'll need the name of your friend, the title of the song, and the filename. The song can be either a song in the default list or a custom one, following the same rules for custom songs as above. More info on the addon page.\n\nPlease note: this feature is currently in beta and probably needs further testing, more updates will come soon.")
+
+	--Dummy table for variable purposes
+	local FriendSongCheckboxes = { };
+	for a, c in ipairs(BloodlustFavoredFriendTable) do
+		FriendSongCheckboxes[a] = "FriendCheckbox" ..a
+	end
+
+	--Dummy table for variable purposes
+	local FriendTestBoxes = { };
+	for a, c in ipairs(BloodlustFavoredFriendTable) do
+		FriendTestBoxes[a] = "FriendTestBox" ..a
+	end
+
+	--Creates a checkbox for every Favored Friend
+	for a,c in ipairs(FriendSongCheckboxes) do
+		FriendSongCheckboxes[a] = CreateFrame("CheckButton", "FriendSongCheckbox ".. a, BloodlustMusic.panel.scrollChild, "UICheckButtonTemplate")
+		if (a == 1) then
+			FriendSongCheckboxes[a]:SetPoint("TOPLEFT", FavoredFriendDescription, "BOTTOMLEFT",  -10, -15)
+		else
+			FriendSongCheckboxes[a]:SetPoint("TOPLEFT", FriendSongCheckboxes[a-1].text, "BOTTOMLEFT", -30, (-10))
+		end
+
+		FriendSongCheckboxes[a].text:SetFontObject("GameFontHighlight")
+		--if the friend has a name at the given index
+		if BloodlustFavoredFriendTable[a]["Name"] ~= "" then
+			--set the name
+			FriendSongCheckboxes[a].text:SetText(a .. ". |cFFFFD100'" .. BloodlustFavoredFriendTable[a]["Name"] .."'|r will play: " .. BloodlustFavoredFriendTable[a]["Title"])
+			--create a test button next to it
+			FriendTestBoxes[a] = CreateFrame("Button", "SongEditButton ".. a, BloodlustMusic.panel.scrollChild, "UIPanelButtonTemplate")
+			FriendTestBoxes[a]:SetPoint("TOPLEFT", FriendSongCheckboxes[a].text, "TOPRIGHT", 0, -1.8)
+			FriendTestBoxes[a]:SetWidth(SongEditButtonWidth)
+			FriendTestBoxes[a].text = _G["FriendTestBoxes".."Text"]
+			FriendTestBoxes[a]:SetText("Test")
+			FriendTestBoxes[a]:SetScript("OnClick", function(self, arg1)
+				if (BloodlustMusic.isSongPlaying) then
+					print(BloodlustMusic.announcerHeader .. "Song test prevented. A song is already playing.")
+				elseif(BloodlustMusicMute) then
+					print(BloodlustMusic.announcerHeader .. "Song test prevented. BloodlustMusic is currently muted.")
+				elseif not(BloodlustFavoredFriendTable[a]["Enabled"]) then
+					print(BloodlustMusic.announcerHeader .. "Song test prevented. The song is not enabled.")
+				elseif (BloodlustFavoredFriendTable[a]["Title"] == "" or BloodlustFavoredFriendTable[a]["Path"] == "") then
+					print(BloodlustMusic.announcerHeader .. "Song test prevented. Please fill in all the details.")	
+				else
+					print(BloodlustMusic.announcerHeader .. "Test song started");
+					SongPlayerPrimer(BloodlustMusic.currentSongSpellID, 0, a)
+					C_Timer.After(10, function() -- wait a bit
+						StopSong(false)
+					print(BloodlustMusic.announcerHeader .. "Test song stopped")
+					end)
+				end
+			end)
+		else
+			FriendSongCheckboxes[a].text:SetText(a .. ". ")
+		end
+		
+		
+		FriendSongCheckboxes[a].text:SetWidth((BloodlustMusic.panel.scrollChild:GetWidth()) - 165)--scrollbarOffset - (SongEditButtonWidth*2))
+		FriendSongCheckboxes[a].text:SetHeight(30)
+		FriendSongCheckboxes[a].text:SetJustifyH("LEFT")
+		FriendSongCheckboxes[a].text:SetWordWrap(true)
+		FriendSongCheckboxes[a].text:SetNonSpaceWrap(true)
+
+		if (getglobal("FriendSongCheckbox "..a):GetChecked() ~= BloodlustFavoredFriendTable[a]["Enabled"]) then
+			getglobal("FriendSongCheckbox "..a):SetChecked(BloodlustFavoredFriendTable[a]["Enabled"]);
+		end
+
+		FriendSongCheckboxes[a]:SetScript("OnClick", function(self,event,arg1)
+			if (self:GetChecked()) then
+				BloodlustFavoredFriendTable[a]["Enabled"] = true;
+			else
+				BloodlustFavoredFriendTable[a]["Enabled"] = false;
+			end
+		end)
+
+	end
+
+	--Dummy table for variable purposes
+	local FriendEditButtons = { };
+	for a, c in ipairs(BloodlustFavoredFriendTable) do
+		FriendEditButtons[a] = "FriendButton" ..a
+	end
+
+	--Create Editbuttons to accompany the Checkboxes
+	for a,c in ipairs(FriendEditButtons) do
+		FriendEditButtons[a] = CreateFrame("Button", "FriendSongEditButton ".. a, BloodlustMusic.panel.scrollChild, "UIPanelButtonTemplate")
+		FriendEditButtons[a]:SetPoint("TOPLEFT", FriendSongCheckboxes[a].text, "TOPRIGHT", SongEditButtonWidth + 15, -1.8)
+		FriendEditButtons[a]:SetWidth(SongEditButtonWidth)
+		FriendEditButtons[a].text = _G["TestingButton".."Text"]
+		FriendEditButtons[a]:SetText("Edit")
+		FriendEditButtons[a]:SetScript("OnClick", function(self, arg1)
+			FriendPanel(a)
+		end)
+	end
+
+	--Button to set the friend to default
+	local FriendDefaultButton = CreateFrame("Button","FriendDefaultButton", BloodlustMusic.panel.scrollChild,"UIPanelButtonTemplate")
+	FriendDefaultButton:SetWidth(170)
+	FriendDefaultButton:SetPoint("CENTER", FriendSongCheckboxes[(table.getn(FriendSongCheckboxes))].text, "CENTER",  27, -40)
+	FriendDefaultButton.text = _G["FriendDefaultButton".."Text"]
+	FriendDefaultButton:SetText("Clear Favored Friend List")
+	FriendDefaultButton:SetScript("OnClick", function(self, arg1)
+		ConfirmPanel(nil, "DefaultAllFriends", "\n |cFFFFD100WARNING:|r This will clear the entire list of Favored Friends and all checkboxes will be turned OFF.\n \n \n This action cannot be reversed and any change you have made to this list will have to be entered manually again. \n \n \n Accept and reload?");
+	end)
 
 	--Checkbox to mute BloodlustMusic
 	local MuteCheckbox = CreateFrame("CheckButton", "MuteCheckbox", BloodlustMusic.panel.scrollChild, "UICheckButtonTemplate")
@@ -497,6 +746,9 @@ local function BloodlustStartingFrame_OnEvent(self, event, ...)
 		if (not BloodlustSongObjectTable) or (table.getn(BloodlustSongObjectTable)<60) then
 			BloodlustSongObjectTableDefault()
 		end
+		if (not BloodlustFavoredFriendTable) then
+			BloodlustFavoredFriendTableDefault()
+		end
         if (not BloodlustSoundchannelNumber) then
             BloodlustSoundchannelNumber = 5
         end
@@ -523,6 +775,7 @@ local function BloodlustStartingFrame_OnEvent(self, event, ...)
 		end
 
 		--Create all the panels
+		FriendPanelCreation()
 		InputPanelCreation()
 		ConfirmPanelCreation()
         PanelCreation()

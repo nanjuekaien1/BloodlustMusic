@@ -1,5 +1,6 @@
 BloodlustMusic = { };
 
+--the hard-coded, default list of songs
 BloodlustMusic.DefaultSongTable =
 {
 				{Title = "Manuel - GAS GAS GAS", Path = "GasHero.ogg", Enabled = true}, --1
@@ -63,6 +64,17 @@ BloodlustMusic.DefaultSongTable =
 				{Title = "Ace - Crazy On Emotion", Path = "CrazyEmotionHero.ogg", Enabled = true}, --59
 				{Title = "2 Fast - Burning Up The Night", Path = "BurningNightHero.ogg", Enabled = true}, --60
 }
+
+--the default, empty friendlist
+BloodlustMusic.DefaultFavoredFriendTable =
+{
+	{Name = "", Title = "", Path = "", Enabled = false}, --1
+	{Name = "", Title = "", Path = "", Enabled = false}, --2
+	{Name = "", Title = "", Path = "", Enabled = false}, --3
+	{Name = "", Title = "", Path = "", Enabled = false}, --4
+	{Name = "", Title = "", Path = "", Enabled = false}, --5
+}
+
 BloodlustMusic.soundChannelTable = {
     "master",
     "sfx",
@@ -124,6 +136,27 @@ C_Timer.After(.1, function() -- wait a bit
 	playerGUID = UnitGUID("player");
 end)
 
+--Checks the Unittype of a certain UnitGUID and returns the value
+function GUIDcheck(guid)
+	if guid then
+		local unit_type = strsplit("-", guid)
+		return unit_type
+	end
+end
+
+--function to check whether the Hero sourceName matches a given friendName. Also tests for pets.
+function FavoredFriendCheck(sourceName, sourceUnitType, friendName)
+	if friendName == sourceName and sourceUnitType == "Player" then
+		return true
+	elseif (UnitName(friendName .. "-pet") == sourceName) and sourceUnitType == "Pet" then
+		return true
+	else
+		return false
+	end
+end
+
+
+
 --Stops the song when Hero ends or is cancelled, resets variables and CVars to previous levels
 function StopSong(Showtext)
 	--Stops the song when Hero ends or is cancelled
@@ -138,31 +171,46 @@ function StopSong(Showtext)
 end
 
 --Repeatable function to play a song
-function SongPlayerRepeatable(song)
+function SongPlayerRepeatable(songIndex, friendIndex)
+	local path
+	local title
+	local enabled
+	--Checks if the song must be obtained from the Friendlist, or the normal lists and sets variables accordingly
+	if (friendIndex > 0 )and (BloodlustFavoredFriendTable[friendIndex]["Enabled"]) and (BloodlustFavoredFriendTable[friendIndex]["Title"] ~= "")and (BloodlustFavoredFriendTable[friendIndex]["Path"] ~= "")then
+		path = BloodlustFavoredFriendTable[friendIndex]["Path"]
+		title = BloodlustFavoredFriendTable[friendIndex]["Title"]
+		enabled = BloodlustFavoredFriendTable[friendIndex]["Enabled"]
+	else
+		path = BloodlustSongObjectTable[songIndex]["Path"]
+		title = BloodlustSongObjectTable[songIndex]["Title"]
+		enabled = BloodlustSongObjectTable[songIndex]["Enabled"]
+	end
 	--Checks if the desired song is in the default list, and sets the filepath accordingly
 	currentFilePath = customFilePath
 	for a, c in pairs(BloodlustMusic.DefaultSongTable) do
-		if c["Path"] == BloodlustSongObjectTable[song]["Path"] then
+		if c["Path"] == path then
 			currentFilePath = defaultFilePath;
 		end
 	end
 
+	--Preps and sets the announcement that a song is playing
 	currentlyPlaying = BloodlustMusic.announcerHeader ..  "Now Playing: "
 
-    if(BloodlustSongObjectTable[song]["Enabled"])
+    if(enabled)
     then
-        currentlyPlaying = currentlyPlaying .. BloodlustSongObjectTable[song]["Title"]
-		currentFilePath = currentFilePath .. BloodlustSongObjectTable[song]["Path"]
+        currentlyPlaying = currentlyPlaying .. title
+		currentFilePath = currentFilePath .. path
     else
         currentlyPlaying = currentlyPlaying .. "No Song"
 		currentFilePath = currentFilePath .. "NoSong.ogg"
 	end
 
+	--(Hopefully) plays a song
 	willPlay, BloodlustSoundhandle = PlaySoundFile(currentFilePath, BloodlustMusic.soundChannelTable[BloodlustSoundchannelNumber])
 end
 
 --First time setup and subsequent logic to play a song
-function SongPlayerPrimer(heroSpellID, specificSong)
+function SongPlayerPrimer(heroSpellID, specificSong, favoredFriend)
 	--Checks if a song is playing, or if the addon is muted
     if (BloodlustMusic.isSongPlaying) then
         print(BloodlustMusic.announcerHeader .. "A song is already playing.")
@@ -177,6 +225,7 @@ function SongPlayerPrimer(heroSpellID, specificSong)
 		customFilePath = "interface/addons/bloodlustmusic/customsongs/"
 		currentFilePath = " "
 		currentlyPlaying = " "
+		local friendMessage = " "
 		BloodlustVolumecache = tonumber(GetCVar(BloodlustMusic.soundVolumeTable[BloodlustSoundchannelNumber]))
 
 		--gets the current local time (minute)
@@ -201,7 +250,7 @@ function SongPlayerPrimer(heroSpellID, specificSong)
 		end
 
 		--plays the song
-		SongPlayerRepeatable(songNumber)
+		SongPlayerRepeatable(songNumber, favoredFriend)
 
 		--checks if song actually played
 		if(not willPlay == true) then
@@ -211,7 +260,7 @@ function SongPlayerPrimer(heroSpellID, specificSong)
 				randomNumber=math.random(1,table.getn(BloodlustSongObjectTable))
 
 				--plays the song
-				SongPlayerRepeatable(randomNumber)
+				SongPlayerRepeatable(randomNumber, 0)
 				tried = tried + 1
 
 				--ends the loop if a song played or after 20 tries
@@ -232,6 +281,17 @@ function SongPlayerPrimer(heroSpellID, specificSong)
 		else
 			BloodlustMusic.isSongPlaying = true
 			BloodlustMusic.currentSongSpellID = heroSpellID
+			if favoredFriend > 0 and BloodlustFavoredFriendTable[favoredFriend]["Enabled"] and BloodlustFavoredFriendTable[favoredFriend]["Title"] ~= "" and BloodlustFavoredFriendTable[favoredFriend]["Path"] ~= "" then
+				friendMessage = BloodlustMusic.announcerHeader .. "Hero was cast by your Favored Friend: " ..  BloodlustFavoredFriendTable[favoredFriend]["Name"]
+				--show a message Hero was cast by a favoredFriend
+				print(friendMessage)
+			end
+			--if statement here shouldnt fire, will fix later
+			if favoredFriend > 0  and not(BloodlustFavoredFriendTable[favoredFriend]["Enabled"]) and BloodlustFavoredFriendTable[favoredFriend]["Title"] ~= "" and BloodlustFavoredFriendTable[favoredFriend]["Path"] ~= "" then
+				friendMessage = BloodlustMusic.announcerHeader .. "Hero was cast by your Favored Friend: " ..  BloodlustFavoredFriendTable[favoredFriend]["Name"].. ". But the song wasn't enabled. Playing another song instead."
+				print (friendMessage)
+			end
+			--show a message that a song is playing
 			print(currentlyPlaying)
 		end
 	end
@@ -240,20 +300,33 @@ end
 
 --listens for all Events, and filters out the player obtaining or removing a hero buff
 function f:OnEvent()
-	local _, event, _, _, _, _, _, destinationGUID, _, _, _, spellID, spellName, _, _ = CombatLogGetCurrentEventInfo();
-
+	local _, event, _, sourceGUID, sourceName, _, _, destinationGUID, _, _, _, spellID, spellName, _, _ = CombatLogGetCurrentEventInfo();
+	local favoredFriend = 0
+		--if a spell is cast, and the target is the player then
 		if (event == "SPELL_AURA_APPLIED" and destinationGUID == playerGUID)
 		then
 			for key,value in pairs(spellIDS) do
+				--if the buff applied was a hero buff then
 				if (value == spellID) then
-				        SongPlayerPrimer(value, 0);
+						--check if the person who casts the spell was in the Friendlist
+						for a,c in pairs(BloodlustFavoredFriendTable) do
+							if (FavoredFriendCheck(Ambiguate(sourceName, "short"), GUIDcheck(sourceGUID), c["Name"]) and BloodlustFavoredFriendTable[a]["Enabled"]) then
+								favoredFriend = a;
+								break
+							end
+						end
+						--play a song
+				        SongPlayerPrimer(value, 0, favoredFriend);
 				end
 			end
+		--if a buff was removed from the player then
 		elseif (event == "SPELL_AURA_REMOVED" and destinationGUID == playerGUID)
 		then
+			--if the buff removed was a hero buff then
 			for key,value in pairs(spellIDS) do
 				if (value == spellID and value == BloodlustMusic.currentSongSpellID)
 				then
+				--stop the song
 				StopSong(true);
 				end
 			end
@@ -278,7 +351,7 @@ Loading_EventFrame:SetScript("OnEvent",
 	function(self, event, isInitialLogin, isReloadingUi)
 		StopSong(false)
 		f:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
-		C_Timer.After(1, function()
+		C_Timer.After(2, function()
 			f:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
 			if BloodlustMusicShowPanelAfterReload == true then
 				InterfaceOptionsFrame:Show()
