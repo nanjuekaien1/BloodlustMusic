@@ -114,8 +114,7 @@ BloodlustMusic.announcerHeader = "|cFFff2f00BloodlustMusic:|r "
 --Create a slash command
 SLASH_BLOODLUSTMUSIC1, SLASH_BLOODLUSTMUSIC2 = '/blm', '/bloodlust';
 function SlashCmdList.BLOODLUSTMUSIC(msg, editbox)
-	InterfaceOptionsFrame:Show()
-	InterfaceOptionsFrame_OpenToCategory(BloodlustMusic.panel);
+	Settings.OpenToCategory(BloodlustMusic.category:GetID());
 end
 
 --Declaring Variables
@@ -130,7 +129,7 @@ local currentFilePath = " "
 local currentlyPlaying = " "
 local minute = 0
 local songNumber = 0
-local spellIDS = {80353, 32182, 2825, 264667, 146555, 178207, 256740, 230935, 309658, 350249}
+local spellIDS = {80353, 32182, 2825, 264667, 146555, 178207, 256740, 230935, 309658, 350249, 368245}
 
 C_Timer.After(.1, function() -- wait a bit
 	playerGUID = UnitGUID("player");
@@ -289,7 +288,7 @@ function SongPlayerPrimer(heroSpellID, specificSong, favoredFriend)
 			--if statement here shouldnt fire, will fix later
 			if favoredFriend > 0  and not(BloodlustFavoredFriendTable[favoredFriend]["Enabled"]) and BloodlustFavoredFriendTable[favoredFriend]["Title"] ~= "" and BloodlustFavoredFriendTable[favoredFriend]["Path"] ~= "" then
 				friendMessage = BloodlustMusic.announcerHeader .. "Hero was cast by your Favored Friend: " ..  BloodlustFavoredFriendTable[favoredFriend]["Name"].. ". But the song wasn't enabled. Playing another song instead."
-				print (friendMessage)
+				print(friendMessage)
 			end
 			--show a message that a song is playing
 			print(currentlyPlaying)
@@ -336,12 +335,13 @@ f:SetScript("OnEvent", f.OnEvent);
 
 
 --Main/Options Panel
-local panelWidth = InterfaceOptionsFramePanelContainer:GetWidth()
-local panelHeight = InterfaceOptionsFramePanelContainer:GetHeight()
+local panelWidth = 670 --SettingsPanel:GetWidth()
+local panelHeight = SettingsPanel:GetHeight()
 BloodlustMusic.panel = CreateFrame( "Frame", "BloodlustMusicPanel", UIParent, BackdropTemplateMixin and "BackdropTemplate" );
 BloodlustMusic.panel.name = "BloodlustMusic";
 BloodlustMusic.panel:SetSize(panelWidth, panelHeight);
-InterfaceOptions_AddCategory(BloodlustMusic.panel);
+BloodlustMusic.category, BloodlustMusic.layout = Settings.RegisterCanvasLayoutCategory(BloodlustMusic.panel, "Bloodlust Music")
+Settings.RegisterAddOnCategory(BloodlustMusic.category);
 
 
 --What to do on Login, Reload or Zoning
@@ -354,8 +354,7 @@ Loading_EventFrame:SetScript("OnEvent",
 		C_Timer.After(2, function()
 			f:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
 			if BloodlustMusicShowPanelAfterReload == true then
-				InterfaceOptionsFrame:Show()
-				InterfaceOptionsFrame_OpenToCategory(BloodlustMusic.panel);
+				Settings.OpenToCategory(BloodlustMusic.category:GetID());
 			end
 			BloodlustMusicShowPanelAfterReload = false
 		end)
