@@ -129,7 +129,7 @@ local currentFilePath = " "
 local currentlyPlaying = " "
 local minute = 0
 local songNumber = 0
-local spellIDS = {80353, 32182, 2825, 264667, 146555, 178207, 256740, 230935, 309658, 350249, 368245}
+local spellIDS = {80353, 32182, 2825, 264667, 146555, 178207, 256740, 230935, 309658, 350249, 368245, 390386}
 
 C_Timer.After(.1, function() -- wait a bit
 	playerGUID = UnitGUID("player");
