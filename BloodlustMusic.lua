@@ -129,7 +129,7 @@ local currentFilePath = " "
 local currentlyPlaying = " "
 local minute = 0
 local songNumber = 0
-local spellIDS = {80353, 32182, 2825, 264667, 146555, 178207, 256740, 230935, 309658, 350249, 368245, 390386}
+local spellIDS = {80353, 32182, 2825, 264667, 146555, 178207, 256740, 230935, 309658, 350249, 368245, 390386, 381301}
 
 C_Timer.After(.1, function() -- wait a bit
 	playerGUID = UnitGUID("player");
@@ -153,6 +153,15 @@ function FavoredFriendCheck(sourceName, sourceUnitType, friendName)
 		return false
 	end
 end
+
+--function to quickly turn COMBAT_LOG_EVENT_UNFILTERED off and on again, to prevent Hover fucking up. Bandaid fix honestly
+function HoverFilter()
+		f:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
+		C_Timer.After(.06, function()
+		f:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
+	end)
+end
+
 
 
 
@@ -302,32 +311,36 @@ function f:OnEvent()
 	local _, event, _, sourceGUID, sourceName, _, _, destinationGUID, _, _, _, spellID, spellName, _, _ = CombatLogGetCurrentEventInfo();
 	local favoredFriend = 0
 		--if a spell is cast, and the target is the player then
-		if (event == "SPELL_AURA_APPLIED" and destinationGUID == playerGUID)
-		then
+		if (event == "SPELL_AURA_APPLIED" and destinationGUID == playerGUID) then
+			if (spellID == 358267) then --Checks for Hover
+				HoverFilter()
+			end
 			for key,value in pairs(spellIDS) do
 				--if the buff applied was a hero buff then
 				if (value == spellID) then
-						--check if the person who casts the spell was in the Friendlist
-						for a,c in pairs(BloodlustFavoredFriendTable) do
-							if (FavoredFriendCheck(Ambiguate(sourceName, "short"), GUIDcheck(sourceGUID), c["Name"]) and BloodlustFavoredFriendTable[a]["Enabled"]) then
-								favoredFriend = a;
-								break
-							end
+					--check if the person who casts the spell was in the Friendlist
+					for a,c in pairs(BloodlustFavoredFriendTable) do
+						if (FavoredFriendCheck(Ambiguate(sourceName, "short"), GUIDcheck(sourceGUID), c["Name"]) and BloodlustFavoredFriendTable[a]["Enabled"]) then
+							favoredFriend = a;
+							break
 						end
-						--play a song
-				        SongPlayerPrimer(value, 0, favoredFriend);
+					end
+					--play a song
+				    SongPlayerPrimer(value, 0, favoredFriend);
 				end
 			end
 		--if a buff was removed from the player then
 		elseif (event == "SPELL_AURA_REMOVED" and destinationGUID == playerGUID)
 		then
+			if (spellID == 358267) then --Checks for Hover
+				HoverFilter()
+			end
 			--if the buff removed was a hero buff then
 			for key,value in pairs(spellIDS) do
-				if (value == spellID and value == BloodlustMusic.currentSongSpellID)
-				then
-				--stop the song
-				StopSong(true);
-				end
+				if (value == spellID and value == BloodlustMusic.currentSongSpellID) then
+					--stop the song
+					StopSong(true);
+				end		
 			end
 		end
 end

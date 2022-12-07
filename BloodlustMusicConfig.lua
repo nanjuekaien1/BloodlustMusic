@@ -773,7 +773,6 @@ local function BloodlustStartingFrame_OnEvent(self, event, ...)
 		if(not BloodlustMusicShowPanelAfterReload) then
 			BloodlustMusicShowPanelAfterReload = false
 		end
-
 		--Create all the panels
 		FriendPanelCreation()
 		InputPanelCreation()
