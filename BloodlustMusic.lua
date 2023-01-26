@@ -129,7 +129,8 @@ local currentFilePath = " "
 local currentlyPlaying = " "
 local minute = 0
 local songNumber = 0
-local spellIDS = {80353, 32182, 2825, 264667, 146555, 178207, 256740, 230935, 309658, 350249, 368245, 390386, 381301}
+local spellIDS = {80353, 32182, 2825, 264667, 146555, 178207, 256740, 230935, 309658, 350249, 368245, 390386, 381301, 386540}
+--342242 not implemented yet
 
 C_Timer.After(.1, function() -- wait a bit
 	playerGUID = UnitGUID("player");
@@ -157,7 +158,7 @@ end
 --function to quickly turn COMBAT_LOG_EVENT_UNFILTERED off and on again, to prevent Hover fucking up. Bandaid fix honestly
 function HoverFilter()
 		f:UnregisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
-		C_Timer.After(.06, function()
+		C_Timer.After(.1, function()
 		f:RegisterEvent("COMBAT_LOG_EVENT_UNFILTERED");
 	end)
 end
