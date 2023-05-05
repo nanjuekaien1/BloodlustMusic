@@ -333,7 +333,7 @@ local function PanelCreation()
 
     BloodlustMusic.panel.scrollChild = CreateFrame("Frame", "BloodlustMusicScrollChild", BloodlustMusic.panel.scrollFrame);
 	BloodlustMusic.panel.scrollFrame:SetScrollChild(BloodlustMusic.panel.scrollChild);
-	BloodlustMusic.panel.scrollChild:SetSize(BloodlustMusic.panel.scrollFrame:GetWidth(), (BloodlustMusic.panel.scrollFrame:GetHeight() * 3.25 ));
+	BloodlustMusic.panel.scrollChild:SetSize(BloodlustMusic.panel.scrollFrame:GetWidth(), (BloodlustMusic.panel.scrollFrame:GetHeight() * 3.15 ));
 
 
 	--Titles and descriptions
@@ -343,7 +343,7 @@ local function PanelCreation()
 
     local BloodlustSubtitle = BloodlustMusic.panel.scrollChild:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
     BloodlustSubtitle:SetPoint("TOPLEFT", BloodlustTitle, "RIGHT", 5, 3)
-    BloodlustSubtitle:SetText("Version 1.3 (patch 10.0.0)")
+    BloodlustSubtitle:SetText("Version 1.3.2 (patch 10.1.0)")
 
 	local BloodlustDescription = BloodlustMusic.panel.scrollChild:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
     BloodlustDescription:SetPoint("TOPLEFT", BloodlustTitle, "BOTTOMLEFT", 0, -8)
@@ -600,7 +600,7 @@ local function PanelCreation()
     FavoredFriendDescription:SetPoint("TOPLEFT", SongCheckboxes[(math.ceil(table.getn(BloodlustSongObjectTable)/2))], "BOTTOMLEFT", 10 , -60)
 	FavoredFriendDescription:SetWidth(BloodlustMusic.panel.scrollFrame:GetWidth() - scrollbarOffset)
 	FavoredFriendDescription:SetJustifyH("LEFT")
-	FavoredFriendDescription:SetText("Want to hear a certain song when a certain player casts Hero? You can by using the Favored Friend feature below. Just click the edit button and enter some values in the screen that pops up. You'll need the name of your friend, the title of the song, and the filename. The song can be either a song in the default list or a custom one, following the same rules for custom songs as above. More info on the addon page.\n\nPlease note: this feature is currently in beta and probably needs further testing, more updates will come soon.")
+	FavoredFriendDescription:SetText("Want to hear a certain song when a certain player casts Hero? You can by using the Favored Friend feature below. Just click the edit button and enter some values in the screen that pops up. You'll need the name of your friend, the title of the song, and the filename. The song can be either a song in the default list or a custom one, following the same rules for custom songs as above. More info on the addon page.")
 
 	--Dummy table for variable purposes
 	local FriendSongCheckboxes = { };
