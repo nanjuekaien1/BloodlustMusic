@@ -343,7 +343,7 @@ local function PanelCreation()
 
     local BloodlustSubtitle = BloodlustMusic.panel.scrollChild:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
     BloodlustSubtitle:SetPoint("TOPLEFT", BloodlustTitle, "RIGHT", 5, 3)
-    BloodlustSubtitle:SetText("Version 1.3.2 (patch 10.1.5)")
+    BloodlustSubtitle:SetText("Version 1.3.2 (patch 10.1.7)")
 
 	local BloodlustDescription = BloodlustMusic.panel.scrollChild:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
     BloodlustDescription:SetPoint("TOPLEFT", BloodlustTitle, "BOTTOMLEFT", 0, -8)
