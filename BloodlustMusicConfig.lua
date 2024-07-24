@@ -739,6 +739,7 @@ BloodlustStartingFrame:RegisterEvent("ADDON_LOADED");
 local function BloodlustStartingFrame_OnEvent(self, event, ...)
     if (event == "ADDON_LOADED") and (... == "BloodlustMusic") then
         print(BloodlustMusic.announcerHeader .. "Loaded");
+		print(BloodlustMusic.announcerHeader .. "Currently in dev testing");
          --Checks for saved variables, if they don't exist, we create them
 		if (BloodlustMusicSongEnabledTable) then
             BloodlustMusicSongEnabledTable = nil

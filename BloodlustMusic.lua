@@ -254,6 +254,9 @@ function SongPlayerPrimer(heroSpellID, specificSong, favoredFriend)
 		BloodlustVolumecache = tonumber(GetCVar(BloodlustMusic.soundVolumeTable[BloodlustSoundchannelNumber]))
 		BloodlustSoundchannelscache = GetCVar("Sound_NumChannels")
 		SetCVar(BloodlustMusic.soundVolumeTable[BloodlustSoundchannelNumber], BloodlustVolumecache < BloodlustChannelVolume and BloodlustChannelVolume or BloodlustVolumecache)
+		--tests
+		print(BloodlustMusic.announcerHeader .. BloodlustMusic.soundVolumeTable[BloodlustSoundchannelNumber] .. " currennt volume is: " .. tonumber(GetCVar(BloodlustMusic.soundVolumeTable[BloodlustSoundchannelNumber])))
+		--
 		if (BloodlustMaxSoundchannelBoolean) then
  	 		SetCVar("Sound_NumChannels", 128)
 		end
@@ -328,6 +331,13 @@ function f:OnEvent()
 					end
 					--play a song
 				    SongPlayerPrimer(value, 0, favoredFriend);
+					--tests
+					
+						C_Timer.After(20, function() -- wait a bit
+							print(BloodlustMusic.announcerHeader .. BloodlustMusic.soundVolumeTable[BloodlustSoundchannelNumber] .. " currennt volume is: " .. tonumber(GetCVar(BloodlustMusic.soundVolumeTable[BloodlustSoundchannelNumber])))
+						end)
+					
+					--
 				end
 			end
 		--if a buff was removed from the player then
