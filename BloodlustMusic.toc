@@ -1,4 +1,4 @@
-## Interface: 100207
+## Interface: 110000
 ## Title: Bloodlust Music
 ## Notes: A bloated, over-engineered Addon that plays music during Bloodlust
 ## Author: Yellowdevil-ArgentDawn
