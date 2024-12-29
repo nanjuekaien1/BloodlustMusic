@@ -20,6 +20,7 @@ if LOCALE == "enUS" then
     L["Change Title to: "] = "Change Title to: "
     L["Changing soundchannel prevented, please do so after hero has ended"] = "Changing soundchannel prevented, please do so after hero has ended"
     L["Clear Favored Friend List"] = "Clear Favored Friend List"
+    L["Current soundchannel: "] = "Current soundchannel: "
     L["Edit"] = "Edit"
     L["Everything set? Press the button below for a 10 second test song. Enter a number between 1 and 60 to test a specific song. Want a random one? Leave it empty or place a 0. Please note: no other songs can play at the same time."] = "Everything set? Press the button below for a 10 second test song. Enter a number between 1 and 60 to test a specific song. Want a random one? Leave it empty or place a 0. Please note: no other songs can play at the same time."
     L["Favored Friend filename: \n |cFFFFD100(NB: Needs filetype in the name, .ogg is most common. Also make sure the file for any custom song is in the 'customsongs' folder, not the 'sounds' folder)|r"] = "Favored Friend filename: \n |cFFFFD100(NB: Needs filetype in the name, .ogg is most common. Also make sure the file for any custom song is in the 'customsongs' folder, not the 'sounds' folder)|r"
@@ -78,21 +79,22 @@ if LOCALE == "enUS" then
 return end
 
 if LOCALE == "zhCN" then
-    L[" is now set to: "] = " 现在设置为："
-    L[" soundchannel during Hero"] = " 英勇期间的声道"
-    L[" volume during Hero"] = " 英勇期间的音量"
-    L["'|r will play: "] = "'|r 播放: "
-    L["'|r\n becomes \n|cFFFFD100'"] = "'|r\n 改为 \n|cFFFFD100'"
-    L["'|r\n turns back to \n|cFFFFD100'"] = "'|r\n 改回到 \n|cFFFFD100'"
-    L["'|r\n \n \n Accept and reload?"] = "'|r\n \n \n 接受并重新加载？"
-    L["A stupid Addon to play music during Hero, Bloodlust, Primal Rage, etc. You can change a couple of settings below to your liking. Some barebones information is provided next to the corresponding option. For a more in depth explanation, please refer to the description of the addon at: https://www.curseforge.com/wow/addons/bloodlustmusic . Thanks and enjoy!"] = "在获得英勇/嗜血/远古狂乱/青铜龙的祝福等增益在游戏中播放音乐的傻瓜式插件。你可以根据自己的喜好更改下面的一些设置。相应选项旁边会提供一些基本信息。如需更深入的解释，请参阅插件说明：https://www.curseforge.com/wow/addons/bloodlustmusic 。谢谢，祝你玩得愉快！"
-    L["Accept"] = "接受"
-    L["Bloodlust Music"] = "英勇音乐"
-    L["Cancel"] = "取消"
-    L["Change Song filename to: \n |cFFFFD100(NB: Needs filetype in the name, .ogg is most common. Also make sure the file for any custom song is in the 'customsongs' folder, not the 'sounds' folder)|r"] = "将歌曲文件名改为：\n |cFFFFD100（注意：文件名中需要包含文件类型，.ogg 是最常见的。确保任何自定义歌曲的文件在 'customsongs' 文件夹中，而不是 'sounds' 文件夹）|r"
-    L["Change Title to: "] = "标题改为："
-    L["Changing soundchannel prevented, please do so after hero has ended"] = "无法更改声音通道，请在增益结束后再进行"
-    L["Clear Favored Friend List"] = "清除好友设置列表"
+	L[" is now set to: "] = " 现在设置为："
+	L[" soundchannel during Hero"] = " 英勇期间的声道"
+	L[" volume during Hero"] = " 英勇期间的音量"
+	L["'|r will play: "] = "'|r 播放: "
+	L["'|r\n becomes \n|cFFFFD100'"] = "'|r\n 改为 \n|cFFFFD100'"
+	L["'|r\n turns back to \n|cFFFFD100'"] = "'|r\n 改回到 \n|cFFFFD100'"
+	L["'|r\n \n \n Accept and reload?"] = "'|r\n \n \n 接受并重新加载？"
+	L["A stupid Addon to play music during Hero, Bloodlust, Primal Rage, etc. You can change a couple of settings below to your liking. Some barebones information is provided next to the corresponding option. For a more in depth explanation, please refer to the description of the addon at: https://www.curseforge.com/wow/addons/bloodlustmusic . Thanks and enjoy!"] = "在获得英勇/嗜血/远古狂乱/青铜龙的祝福等增益在游戏中播放音乐的傻瓜式插件。你可以根据自己的喜好更改下面的一些设置。相应选项旁边会提供一些基本信息。如需更深入的解释，请参阅插件说明：https://www.curseforge.com/wow/addons/bloodlustmusic 。谢谢，祝你玩得愉快！"
+	L["Accept"] = "接受"
+	L["Bloodlust Music"] = "英勇音乐"
+	L["Cancel"] = "取消"
+	L["Change Song filename to: \n |cFFFFD100(NB: Needs filetype in the name, .ogg is most common. Also make sure the file for any custom song is in the 'customsongs' folder, not the 'sounds' folder)|r"] = "将歌曲文件名改为：\n |cFFFFD100（注意：文件名中需要包含文件类型，.ogg 是最常见的。确保任何自定义歌曲的文件在 'customsongs' 文件夹中，而不是 'sounds' 文件夹）|r"
+	L["Change Title to: "] = "标题改为："
+	L["Changing soundchannel prevented, please do so after hero has ended"] = "无法更改声道，请在增益结束后再进行"
+	L["Clear Favored Friend List"] = "清除好友设置列表"
+	L["Current soundchannel: "] = "当前声道："
 	L["Edit"] = "编辑"
 	L["Everything set? Press the button below for a 10 second test song. Enter a number between 1 and 60 to test a specific song. Want a random one? Leave it empty or place a 0. Please note: no other songs can play at the same time."] = "一切设置好了吗？按下面的按钮播放 10 秒的测试歌曲。输入 1 到 60 之间的数字以测试特定的歌曲。想要随机歌曲？留空或输入 0。请注意：不能同时播放其他歌曲。"
 	L["Favored Friend filename: \n |cFFFFD100(NB: Needs filetype in the name, .ogg is most common. Also make sure the file for any custom song is in the 'customsongs' folder, not the 'sounds' folder)|r"] = "好友文件名：\n |cFFFFD100（注意：文件名中需要包含文件类型，.ogg 是最常见的。确保任何自定义歌曲的文件在 'customsongs' 文件夹中，而不是 'sounds' 文件夹）|r"
@@ -130,8 +132,8 @@ if LOCALE == "zhCN" then
 	L["\n |cFFFFD100WARNING:|r This will clear the entire list of Favored Friends and all checkboxes will be turned OFF.\n \n \n This action cannot be reversed and any change you have made to this list will have to be entered manually again. \n \n \n Accept and reload?"] = "\n |cFFFFD100WARNING:|r 这将清除整个好友列表，所有复选框将被关闭。\n \n \n 此操作无法撤销，您对该列表所做的任何更改都必须手动重新输入。\n \n \n 接受并重新加载？"
 	L["\n |cFFFFD100WARNING:|r This will set all songs back to their default, hard-coded values, even your custom songs. \n \n \n This action cannot be reversed and any change you have made to any song will have to be entered manually again. \n \n \n Accept and reload?"] = "\n |cFFFFD100WARNING:|r 这将把所有歌曲恢复到其默认的硬编码值，包括您自定义的歌曲。\n \n \n 此操作无法撤销，您对任何歌曲所做的任何更改都必须手动重新输入。\n \n \n 接受并重新加载？"
 
- 
-   --BloodlustMusic.lua
+
+	--BloodlustMusic.lua
 	L[" volume channel is muted."] = " 音量通道已静音。"
 	L[". But the song wasn't enabled. Playing another song instead."] = "。但这首歌未启用。改为播放另一首歌。"
 	L["A song is already playing."] = "已有一首歌曲正在播放。"
@@ -148,6 +150,7 @@ if LOCALE == "zhCN" then
 	L["SFX"] = "音效"
 	L["Song Stopped"] = "歌曲停止"
 	L["|cFFff2f00BloodlustMusic:|r "] = "|cFFff2f00BloodlustMusic:|r "
+
 
 return end
 
