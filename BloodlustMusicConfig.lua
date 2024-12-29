@@ -418,8 +418,8 @@ local function PanelCreation()
 			CloseDropDownMenus()
 		else
 			BloodlustSoundchannelNumber = newValue
-			UIDropDownMenu_SetText(BloodlustDropdown, "Current soundchannel: " .. BloodlustMusic.soundChannelNames[BloodlustSoundchannelNumber])
-			print(BloodlustMusic.announcerHeader .. "Soundchannel changed to: " .. BloodlustMusic.soundChannelNames[BloodlustSoundchannelNumber])
+			UIDropDownMenu_SetText(BloodlustDropdown, L["Current soundchannel: "] .. BloodlustMusic.soundChannelNames[BloodlustSoundchannelNumber])
+			print(BloodlustMusic.announcerHeader .. L["Soundchannel changed to: "] .. BloodlustMusic.soundChannelNames[BloodlustSoundchannelNumber])
 			BloodlustVolumecache = tonumber(GetCVar(BloodlustMusic.soundVolumeTable[BloodlustSoundchannelNumber]))
 			BloodlustSlider.tooltipText = L["Volume of "] .. BloodlustMusic.soundChannelNames[BloodlustSoundchannelNumber] .. L[" soundchannel during Hero"]
 			BloodlustSliderLabel:SetText(BloodlustMusic.soundChannelNames[BloodlustSoundchannelNumber] .. L[" volume during Hero"])
