@@ -1,10 +1,12 @@
-## Interface: 110000
+## Interface: 110007, 110100
 ## Title: Bloodlust Music
 ## Notes: A bloated, over-engineered Addon that plays music during Bloodlust
+## Notes-zhCN: 可以在英勇/嗜血期间播放音乐
 ## Author: Yellowdevil-ArgentDawn
 ## Version: 1.3.2
 ## SavedVariables: BloodlustSoundchannelNumber, BloodlustVolumecache, BloodlustSoundhandle, BloodlustChannelVolume, BloodlustMaxSoundchannelBoolean, BloodlustSoundchannelscache, BloodlustMusicMute, BloodlustSongObjectTable, BloodlustMusicShowPanelAfterReload, BloodlustFavoredFriendTable
 
+
 BloodlustMusicConfig.lua
 BloodlustMusic.lua
-
+Localization.lua
