@@ -398,7 +398,7 @@ local function PanelCreation()
 	local BloodlustDropdown = CreateFrame("FRAME", "BloodlustDropdown", BloodlustMusic.panel.scrollChild, "UIDropDownMenuTemplate")
 	BloodlustDropdown:SetPoint("TOPLEFT", BloodlustDropdownDescription, "BOTTOMLEFT", -10, -20)
 	UIDropDownMenu_SetWidth(BloodlustDropdown, 200)
-	UIDropDownMenu_SetText(BloodlustDropdown, "Current soundchannel: " .. BloodlustMusic.soundChannelNames[BloodlustSoundchannelNumber])
+	UIDropDownMenu_SetText(BloodlustDropdown, L["Current soundchannel: "] .. BloodlustMusic.soundChannelNames[BloodlustSoundchannelNumber])
 
 	UIDropDownMenu_Initialize(BloodlustDropdown, function(self, level, menuList)
 		local info = UIDropDownMenu_CreateInfo()
